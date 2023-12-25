@@ -8,6 +8,7 @@ import * as Joi from 'joi';
 import { MongooseModule } from '@nestjs/mongoose';
 import { AuthModule } from './modules/auth/auth.module';
 import { CaslModule } from './modules/casl/casl.module';
+import { TaskModule } from './modules/task/task.module';
 
 @Module({
   imports: [
@@ -33,6 +34,7 @@ import { CaslModule } from './modules/casl/casl.module';
     UsersModule,
     AuthModule,
     CaslModule,
+    TaskModule,
   ],
   controllers: [AppController],
   providers: [AppService],
