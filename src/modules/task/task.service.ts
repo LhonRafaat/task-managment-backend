@@ -14,11 +14,14 @@ export class TaskService {
     private readonly userService: UsersService,
   ) {}
 
-  async create(createTaskDto: CreateTaskDto): Promise<TTask> {
+  async create(createTaskDto: CreateTaskDto, req: IRequest): Promise<TTask> {
     if (!(await this.userService.findOne(createTaskDto.assignee)))
       throw new BadRequestException('Assignee not found');
     // TODO: // check if project exist when creating a task
-    return await this.taskModel.create(createTaskDto);
+    return await this.taskModel.create({
+      ...createTaskDto,
+      reporter: req.user._id,
+    });
   }
 
   async findAll(query: IQuery, req: IRequest): Promise<TResponse<TTask>> {
