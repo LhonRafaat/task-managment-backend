@@ -1,4 +1,5 @@
 import { Schema } from 'mongoose';
+import { TTask } from './models/task.model';
 
 export enum Priority {
   Low = 'low',
@@ -11,7 +12,7 @@ export enum TaskTypes {
   Feature = 'feature',
 }
 
-export const TaskSchema = new Schema(
+export const TaskSchema = new Schema<TTask>(
   {
     title: {
       type: String,
