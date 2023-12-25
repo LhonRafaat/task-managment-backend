@@ -8,6 +8,7 @@ import {
   Delete,
   Query,
   Req,
+  UseGuards,
 } from '@nestjs/common';
 import { TaskService } from './task.service';
 import { CreateTaskDto } from './dto/create-task.dto';
@@ -20,6 +21,7 @@ import {
 } from '../../common/helper/common-types';
 import { TUser } from '../users/user.model';
 import { TTask } from './models/task.model';
+import { AuthGuard } from '@nestjs/passport';
 
 @Controller('task')
 @ApiBearerAuth()
@@ -27,8 +29,9 @@ export class TaskController {
   constructor(private readonly taskService: TaskService) {}
 
   @Post()
-  create(@Body() createTaskDto: CreateTaskDto) {
-    return this.taskService.create(createTaskDto);
+  @UseGuards(AuthGuard('jwt'))
+  create(@Req() req: IRequest, @Body() createTaskDto: CreateTaskDto) {
+    return this.taskService.create(createTaskDto, req);
   }
 
   @Get()
