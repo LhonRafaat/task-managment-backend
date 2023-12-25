@@ -13,6 +13,10 @@ export class CreateTaskDto {
 
   @ApiProperty()
   @IsString()
+  curentColumn: string;
+
+  @ApiProperty()
+  @IsString()
   description: string;
 
   @ApiProperty()

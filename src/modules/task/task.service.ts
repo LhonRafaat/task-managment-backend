@@ -5,12 +5,19 @@ import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { TTask } from './models/task.model';
 import { IQuery, IRequest, TResponse } from '../../common/helper/common-types';
+import { UsersService } from '../users/users.service';
 
 @Injectable()
 export class TaskService {
-  constructor(@InjectModel('Task') private readonly taskModel: Model<TTask>) {}
+  constructor(
+    @InjectModel('Task') private readonly taskModel: Model<TTask>,
+    private readonly userService: UsersService,
+  ) {}
 
   async create(createTaskDto: CreateTaskDto): Promise<TTask> {
+    if (!(await this.userService.findOne(createTaskDto.assignee)))
+      throw new BadRequestException('Assignee not found');
+    // TODO: // check if project exist when creating a task
     return await this.taskModel.create(createTaskDto);
   }
 
