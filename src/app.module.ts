@@ -9,6 +9,7 @@ import { MongooseModule } from '@nestjs/mongoose';
 import { AuthModule } from './modules/auth/auth.module';
 import { CaslModule } from './modules/casl/casl.module';
 import { TaskModule } from './modules/task/task.module';
+import { ProjectModule } from './modules/project/project.module';
 
 @Module({
   imports: [
@@ -35,6 +36,7 @@ import { TaskModule } from './modules/task/task.module';
     AuthModule,
     CaslModule,
     TaskModule,
+    ProjectModule,
   ],
   controllers: [AppController],
   providers: [AppService],
