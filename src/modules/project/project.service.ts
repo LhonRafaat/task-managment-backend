@@ -11,8 +11,22 @@ export class ProjectService {
   constructor(
     @InjectModel('Project') private readonly projectModel: Model<TProject>,
   ) {}
-  create(createProjectDto: CreateProjectDto) {
-    return 'This action adds a new project';
+  async create(
+    createProjectDto: CreateProjectDto,
+    req: IRequest,
+  ): Promise<TProject> {
+    const count = await this.findAll(
+      { ...req.query, limit: 100000 } as IQuery,
+      req,
+    );
+    return await this.projectModel.create({
+      ...createProjectDto,
+      slug:
+        createProjectDto.title.substring(0, 3).toUpperCase() +
+        count.result.length +
+        1,
+      boardColumns: ['in progress'],
+    });
   }
 
   async findAll(query: IQuery, req: IRequest): Promise<TResponse<TProject>> {

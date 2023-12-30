@@ -4,6 +4,9 @@ import { TUser } from '../../users/user.model';
 
 export class TProject {
   @ApiProperty()
+  _id: string;
+
+  @ApiProperty()
   title: string;
 
   @ApiProperty()
@@ -32,4 +35,10 @@ export class TProject {
 
   @ApiProperty()
   isActive: boolean;
+
+  @ApiProperty()
+  createdAt: string;
+
+  @ApiProperty()
+  updatedAt: string;
 }

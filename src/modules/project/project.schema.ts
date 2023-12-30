@@ -21,6 +21,7 @@ export const Project = new Schema(
     },
     boardColumns: {
       type: [String],
+      required: true,
     },
 
     leadUser: {
