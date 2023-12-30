@@ -1,9 +1,25 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Patch,
+  Param,
+  Delete,
+  UseGuards,
+  Req,
+  Query,
+} from '@nestjs/common';
 import { ProjectService } from './project.service';
 import { CreateProjectDto } from './dto/create-project.dto';
 import { UpdateProjectDto } from './dto/update-project.dto';
+import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
+import { AuthGuard } from '@nestjs/passport';
+import { IQuery, IRequest } from '../../common/helper/common-types';
 
 @Controller('project')
+@ApiTags('Project')
+@ApiBearerAuth()
 export class ProjectController {
   constructor(private readonly projectService: ProjectService) {}
 
@@ -13,8 +29,9 @@ export class ProjectController {
   }
 
   @Get()
-  findAll() {
-    return this.projectService.findAll();
+  @UseGuards(AuthGuard('jwt'))
+  findAll(@Req() req: IRequest, @Query() query: IQuery) {
+    return this.projectService.findAll(query, req);
   }
 
   @Get(':id')
