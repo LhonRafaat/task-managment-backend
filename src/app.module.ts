@@ -10,6 +10,7 @@ import { AuthModule } from './modules/auth/auth.module';
 import { CaslModule } from './modules/casl/casl.module';
 import { TaskModule } from './modules/task/task.module';
 import { ProjectModule } from './modules/project/project.module';
+import { OrganizationModule } from './modules/organization/organization.module';
 
 @Module({
   imports: [
@@ -37,6 +38,7 @@ import { ProjectModule } from './modules/project/project.module';
     CaslModule,
     TaskModule,
     ProjectModule,
+    OrganizationModule,
   ],
   controllers: [AppController],
   providers: [AppService],
