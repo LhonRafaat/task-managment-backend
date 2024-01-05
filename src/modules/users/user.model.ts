@@ -1,4 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
+import { TOrganization } from '../organization/models/organization.model';
 
 export class TUser {
   @ApiProperty()
@@ -15,6 +16,9 @@ export class TUser {
 
   @ApiProperty()
   avatar: string;
+
+  @ApiProperty()
+  organization: TOrganization;
 
   @ApiProperty()
   isAdmin: boolean;

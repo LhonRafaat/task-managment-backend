@@ -19,6 +19,10 @@ export const User = new Schema<TUser>(
       required: true,
       select: false,
     },
+    organization: {
+      type: Schema.Types.ObjectId,
+      ref: 'Organization',
+    },
     avatar: {
       type: String,
       required: false,

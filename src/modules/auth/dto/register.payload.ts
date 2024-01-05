@@ -1,6 +1,5 @@
-import { ApiProperty, PartialType } from '@nestjs/swagger';
+import { ApiProperty } from '@nestjs/swagger';
 import { IsNotEmpty, IsString } from 'class-validator';
-import { TUser } from '../../users/user.model';
 
 export class RegisterPayload {
   @ApiProperty()
@@ -17,6 +16,11 @@ export class RegisterPayload {
   @IsNotEmpty()
   @IsString()
   email: string;
+
+  @ApiProperty()
+  @IsNotEmpty()
+  @IsString()
+  organization: string;
 
   @ApiProperty()
   @IsString()
