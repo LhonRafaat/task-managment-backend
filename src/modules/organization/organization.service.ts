@@ -12,8 +12,10 @@ export class OrganizationService {
     @InjectModel('Organization')
     private readonly organizationModel: Model<TOrganization>,
   ) {}
-  create(createOrganizationDto: CreateOrganizationDto) {
-    return 'This action adds a new organization';
+  async create(
+    createOrganizationDto: CreateOrganizationDto & { owner: string },
+  ): Promise<TOrganization> {
+    return await this.organizationModel.create(createOrganizationDto);
   }
 
   async findAll(
@@ -49,11 +51,22 @@ export class OrganizationService {
     return organization;
   }
 
-  update(id: string, updateOrganizationDto: UpdateOrganizationDto) {
-    return `This action updates a #${id} organization`;
+  async update(
+    id: string,
+    updateOrganizationDto: UpdateOrganizationDto,
+  ): Promise<TOrganization> {
+    await this.findOne(id);
+
+    return await this.organizationModel.findByIdAndUpdate(
+      id,
+      updateOrganizationDto,
+      { new: true, runValidators: true },
+    );
   }
 
-  remove(id: string) {
-    return `This action removes a #${id} organization`;
+  async remove(id: string): Promise<{ message: string }> {
+    await this.findOne(id);
+
+    return { message: `Organization with id ${id} deleted` };
   }
 }

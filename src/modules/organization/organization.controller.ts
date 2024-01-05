@@ -8,12 +8,14 @@ import {
   Delete,
   Req,
   Query,
+  UseGuards,
 } from '@nestjs/common';
 import { OrganizationService } from './organization.service';
 import { CreateOrganizationDto } from './dto/create-organization.dto';
 import { UpdateOrganizationDto } from './dto/update-organization.dto';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { IQuery, IRequest } from '../../common/helper/common-types';
+import { AuthGuard } from '@nestjs/passport';
 
 @Controller('organization')
 @ApiTags('Organization')
@@ -22,8 +24,15 @@ export class OrganizationController {
   constructor(private readonly organizationService: OrganizationService) {}
 
   @Post()
-  create(@Body() createOrganizationDto: CreateOrganizationDto) {
-    return this.organizationService.create(createOrganizationDto);
+  @UseGuards(AuthGuard('jwt'))
+  create(
+    @Body() createOrganizationDto: CreateOrganizationDto,
+    @Req() req: IRequest,
+  ) {
+    return this.organizationService.create({
+      ...createOrganizationDto,
+      owner: req.user._id,
+    });
   }
 
   @Get()
