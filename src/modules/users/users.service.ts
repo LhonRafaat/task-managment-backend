@@ -49,9 +49,11 @@ export class UsersService {
 
     const saltOrRounds = 10;
     const hashedPassword = await bcrypt.hash(payload.password, saltOrRounds);
+
     const user = await this.userModel.create({
       ...payload,
       password: hashedPassword,
+      organization: null,
     });
 
     organization = await this.organizationService.create({
