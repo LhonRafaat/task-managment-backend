@@ -51,6 +51,12 @@ export class OrganizationService {
     return organization;
   }
 
+  async findByTitle(title: string): Promise<TOrganization> {
+    const organization = await this.organizationModel.findOne({ title });
+
+    return organization;
+  }
+
   async update(
     id: string,
     updateOrganizationDto: UpdateOrganizationDto,

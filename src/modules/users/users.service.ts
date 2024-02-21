@@ -6,10 +6,15 @@ import { TUser } from './user.model';
 import { RegisterPayload } from '../auth/dto/register.payload';
 import * as bcrypt from 'bcrypt';
 import { IQuery, IRequest, TResponse } from '../../common/helper/common-types';
+import { OrganizationService } from '../organization/organization.service';
+import { TOrganization } from '../organization/models/organization.model';
 
 @Injectable()
 export class UsersService {
-  constructor(@InjectModel('User') private readonly userModel: Model<TUser>) {}
+  constructor(
+    @InjectModel('User') private readonly userModel: Model<TUser>,
+    private readonly organizationService: OrganizationService,
+  ) {}
 
   async findAll(req: IRequest, query: IQuery): Promise<TResponse<TUser>> {
     const users = this.userModel
@@ -34,12 +39,27 @@ export class UsersService {
   }
 
   async create(payload: RegisterPayload) {
+    let organization: TOrganization | null = null;
+    organization = await this.organizationService.findByTitle(
+      payload.organization,
+    );
+
+    if (organization)
+      throw new BadRequestException('Organization already exists');
+
     const saltOrRounds = 10;
     const hashedPassword = await bcrypt.hash(payload.password, saltOrRounds);
-    return await this.userModel.create({
+    const user = await this.userModel.create({
       ...payload,
       password: hashedPassword,
     });
+
+    organization = await this.organizationService.create({
+      title: payload.organization,
+      owner: user._id,
+    });
+
+    return user;
   }
 
   async findOne(id: string): Promise<TUser> {

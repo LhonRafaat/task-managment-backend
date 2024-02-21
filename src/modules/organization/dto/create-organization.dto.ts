@@ -10,15 +10,15 @@ export class CreateOrganizationDto {
   @ApiProperty()
   @IsString()
   @IsOptional()
-  description: string;
+  description?: string;
 
   @ApiProperty()
   @IsArray()
   @IsOptional()
-  projects: string[];
+  projects?: string[];
 
   @ApiProperty()
   @IsArray()
   @IsOptional()
-  members: string[];
+  members?: string[];
 }
