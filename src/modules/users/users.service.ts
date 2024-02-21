@@ -61,7 +61,7 @@ export class UsersService {
       owner: user._id,
     });
 
-    await this.userModel.findByIdAndUpdate(
+    return await this.userModel.findByIdAndUpdate(
       user._id,
       {
         organization: organization._id,
@@ -71,7 +71,6 @@ export class UsersService {
         runValidators: true,
       },
     );
-    return user;
   }
 
   async findOne(id: string): Promise<TUser> {
