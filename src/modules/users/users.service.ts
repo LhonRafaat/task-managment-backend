@@ -59,6 +59,16 @@ export class UsersService {
       owner: user._id,
     });
 
+    await this.userModel.findByIdAndUpdate(
+      user._id,
+      {
+        organization: organization._id,
+      },
+      {
+        new: true,
+        runValidators: true,
+      },
+    );
     return user;
   }
 
