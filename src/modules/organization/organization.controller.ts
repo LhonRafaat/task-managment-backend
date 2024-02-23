@@ -13,9 +13,15 @@ import {
 import { OrganizationService } from './organization.service';
 import { CreateOrganizationDto } from './dto/create-organization.dto';
 import { UpdateOrganizationDto } from './dto/update-organization.dto';
-import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
-import { IQuery, IRequest } from '../../common/helper/common-types';
+import { ApiBearerAuth, ApiOkResponse, ApiTags } from '@nestjs/swagger';
+import {
+  IQuery,
+  IRequest,
+  getResponseType,
+} from '../../common/helper/common-types';
 import { AuthGuard } from '@nestjs/passport';
+import { TOrganization } from './models/organization.model';
+import { QueryTypes } from '../../common/decorators/query.decorator';
 
 @Controller('organization')
 @ApiTags('Organization')
@@ -25,6 +31,9 @@ export class OrganizationController {
 
   @Post()
   @UseGuards(AuthGuard('jwt'))
+  @ApiOkResponse({
+    type: TOrganization,
+  })
   create(
     @Body() createOrganizationDto: CreateOrganizationDto,
     @Req() req: IRequest,
@@ -36,16 +45,24 @@ export class OrganizationController {
   }
 
   @Get()
+  @ApiOkResponse(getResponseType(TOrganization))
+  @QueryTypes()
   findAll(@Req() req: IRequest, @Query() query: IQuery) {
     return this.organizationService.findAll(req, query);
   }
 
   @Get(':id')
+  @ApiOkResponse({
+    type: TOrganization,
+  })
   findOne(@Param('id') id: string) {
     return this.organizationService.findOne(id);
   }
 
   @Patch(':id')
+  @ApiOkResponse({
+    type: TOrganization,
+  })
   update(
     @Param('id') id: string,
     @Body() updateOrganizationDto: UpdateOrganizationDto,
