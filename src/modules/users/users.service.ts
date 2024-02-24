@@ -74,7 +74,7 @@ export class UsersService {
   }
 
   async findOne(id: string): Promise<TUser> {
-    const user = await this.userModel.findById(id);
+    const user = await this.userModel.findById(id).populate('organization');
     if (!user) throw new BadRequestException('User not found');
     return user;
   }
