@@ -10,6 +10,11 @@ export const Project = new Schema(
       type: String,
       required: true,
     },
+    orgazization: {
+      type: Schema.Types.ObjectId,
+      ref: 'Organization',
+      required: true,
+    },
 
     startDate: {
       type: String,
