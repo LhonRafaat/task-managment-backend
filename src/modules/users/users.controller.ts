@@ -46,6 +46,17 @@ export class UsersController {
     return this.usersService.findAll(req, query);
   }
 
+  @Get('/my-organization')
+  @ApiOkResponse(getResponseType(TUser))
+  @QueryTypes()
+  @UseGuards(AuthGuard('jwt'))
+  async findMyOrganizationUsers(
+    @Req() req: IRequest,
+    @Query() query: IQuery,
+  ): Promise<TResponse<TUser>> {
+    return this.usersService.findMyOrganizationUsers(req, query);
+  }
+
   @UseGuards(AuthGuard('jwt'))
   @ApiOkResponse({ type: TUser })
   @Get('me')

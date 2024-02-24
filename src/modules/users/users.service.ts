@@ -37,6 +37,31 @@ export class UsersService {
 
     return response;
   }
+  async findMyOrganizationUsers(
+    req: IRequest,
+    query: IQuery,
+  ): Promise<TResponse<TUser>> {
+    const users = this.userModel
+      .find({
+        ...req.searchObj,
+        ...req.dateQr,
+        organization: req.user.organization._id,
+      })
+      .sort({ [query.sort]: query.orderBy === 'desc' ? -1 : 1 });
+
+    const total = await users.clone().count();
+
+    users.limit(+query.limit).skip(req.skip);
+
+    const response: TResponse<TUser> = {
+      result: await users.exec(),
+      count: total,
+      limit: +query.limit,
+      page: +query.page,
+    };
+
+    return response;
+  }
 
   async create(payload: RegisterPayload) {
     let organization: TOrganization | null = null;
