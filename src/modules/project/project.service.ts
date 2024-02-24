@@ -25,6 +25,7 @@ export class ProjectService {
         createProjectDto.title.substring(0, 3).toUpperCase() +
         count.result.length +
         1,
+      organization: req.user.organization._id,
       boardColumns: ['in progress'],
     });
   }
