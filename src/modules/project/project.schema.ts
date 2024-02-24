@@ -10,7 +10,7 @@ export const Project = new Schema(
       type: String,
       required: true,
     },
-    orgazization: {
+    organization: {
       type: Schema.Types.ObjectId,
       ref: 'Organization',
       required: true,

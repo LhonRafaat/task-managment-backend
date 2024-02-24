@@ -11,7 +11,7 @@ export class TProject {
   title: string;
 
   @ApiProperty()
-  orgazization: TOrganization;
+  organization: TOrganization;
 
   @ApiProperty()
   description: string;
