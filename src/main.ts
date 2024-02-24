@@ -5,12 +5,14 @@ import { ConfigService } from '@nestjs/config';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import helmet from 'helmet';
 import rateLimiter from 'express-rate-limit';
+import { AllExceptionsFilter } from './common/helper/exceptions-filter';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
 
   const configService = app.get(ConfigService);
   app.setGlobalPrefix('api');
+  app.useGlobalFilters(new AllExceptionsFilter());
   app.useGlobalPipes(
     new ValidationPipe({
       whitelist: true, // set to true to throw an error if extra fields were sent by client
@@ -30,6 +32,7 @@ async function bootstrap() {
       max: 50, // limit each IP to 100 requests per windowMs
     }),
   );
+  app.enableCors();
   const document = SwaggerModule.createDocument(app, config);
   SwaggerModule.setup('api/docs', app, document);
   await app.listen(configService.get('PORT'));
