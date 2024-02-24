@@ -6,6 +6,14 @@ export const Project = new Schema(
       type: String,
       required: true,
     },
+    type: {
+      type: String,
+      required: false,
+    },
+    image: {
+      type: String,
+      required: false,
+    },
     description: {
       type: String,
       required: true,

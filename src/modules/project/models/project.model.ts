@@ -11,6 +11,12 @@ export class TProject {
   title: string;
 
   @ApiProperty()
+  type: string;
+
+  @ApiProperty()
+  image: string;
+
+  @ApiProperty()
   organization: TOrganization;
 
   @ApiProperty()

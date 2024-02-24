@@ -14,6 +14,16 @@ export class CreateProjectDto {
 
   @ApiProperty()
   @IsString()
+  @IsOptional()
+  type: string;
+
+  @ApiProperty()
+  @IsString()
+  @IsOptional()
+  image: string;
+
+  @ApiProperty()
+  @IsString()
   @IsNotEmpty()
   startDate: string;
 
