@@ -83,6 +83,20 @@ export class UsersController {
     return this.usersService.update(id, updateUserDto);
   }
 
+  @Patch('change-password/:id')
+  @ApiOkResponse({ type: TUser })
+  @UseGuards(AuthGuard('jwt'), AbilitiesGuard)
+  async changePassword(
+    @Param('id') id: string,
+    @Body() data: { currentPassword: string; newPassword: string },
+  ): Promise<TUser> {
+    return this.usersService.changePassword(
+      id,
+      data.currentPassword,
+      data.newPassword,
+    );
+  }
+
   @Delete(':id')
   @UseGuards(AuthGuard('jwt'), AbilitiesGuard)
   @checkAbilities({ action: Action.Delete, subject: TUser })

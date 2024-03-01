@@ -116,6 +116,31 @@ export class UsersService {
       .exec();
   }
 
+  async changePassword(
+    id: string,
+    currentPassword: string,
+    newPassword: string,
+  ) {
+    const user = await this.userModel.findById(id).select('+password');
+    if (!user) throw new BadRequestException('User not found');
+
+    // check if current password is correct
+    const isMatch = await bcrypt.compare(currentPassword, user.password);
+    if (!isMatch) {
+      console.log('not isMatch');
+      throw new BadRequestException('Incorrect password');
+    }
+
+    const saltOrRounds = 10;
+    const hashedPassword = await bcrypt.hash(newPassword, saltOrRounds);
+
+    return await this.userModel
+      .findByIdAndUpdate(id, {
+        password: hashedPassword,
+      })
+      .exec();
+  }
+
   async remove(id: string): Promise<{ message: string }> {
     await this.findOne(id);
     await this.userModel.findByIdAndDelete(id);
