@@ -110,6 +110,12 @@ export class UsersService {
     return user;
   }
 
+  async update(id: string, updateUserDto: Partial<TUser>): Promise<TUser> {
+    return this.userModel
+      .findByIdAndUpdate(id, updateUserDto, { new: true })
+      .exec();
+  }
+
   async remove(id: string): Promise<{ message: string }> {
     await this.findOne(id);
     await this.userModel.findByIdAndDelete(id);

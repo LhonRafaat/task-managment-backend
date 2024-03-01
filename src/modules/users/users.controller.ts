@@ -6,6 +6,8 @@ import {
   UseGuards,
   Req,
   Query,
+  Patch,
+  Body,
 } from '@nestjs/common';
 import { UsersService } from './users.service';
 import {
@@ -69,6 +71,16 @@ export class UsersController {
   @ApiOkResponse({ type: TUser })
   findOne(@Param('id') id: string): Promise<TUser> {
     return this.usersService.findOne(id);
+  }
+
+  @Patch(':id')
+  @ApiOkResponse({ type: TUser })
+  @UseGuards(AuthGuard('jwt'), AbilitiesGuard)
+  async update(
+    @Param('id') id: string,
+    @Body() updateUserDto: Partial<TUser>,
+  ): Promise<TUser> {
+    return this.usersService.update(id, updateUserDto);
   }
 
   @Delete(':id')
