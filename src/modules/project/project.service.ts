@@ -36,7 +36,9 @@ export class ProjectService {
         ...req.searchObj,
         ...req.dateQr,
       })
-      .sort({ [query.sort]: query.orderBy === 'desc' ? -1 : 1 });
+      .sort({ [query.sort]: query.orderBy === 'desc' ? -1 : 1 })
+      .select('')
+      .populate('leadUser', 'fullName _id'); // Populate leadUser with name and _id
 
     const total = await projects.clone().countDocuments();
 
@@ -58,6 +60,13 @@ export class ProjectService {
     if (!project) throw new BadRequestException('Project not found');
 
     return project;
+  }
+
+  async findProjectsByUserId(userId: string): Promise<TProject[]> {
+    return this.projectModel
+      .find({ leadUser: userId })
+      .populate('leadUser', 'fullName _id')
+      .exec();
   }
 
   async update(
