@@ -62,9 +62,11 @@ export class ProjectService {
     return project;
   }
 
-  async findProjectsByUserId(userId: string): Promise<TProject[]> {
+  async findProjectsByOrganizationId(
+    organizationId: string,
+  ): Promise<TProject[]> {
     return this.projectModel
-      .find({ leadUser: userId })
+      .find({ organization: organizationId })
       .populate('leadUser', 'fullName _id')
       .exec();
   }

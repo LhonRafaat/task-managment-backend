@@ -51,11 +51,13 @@ export class ProjectController {
     return this.projectService.findOne(id);
   }
 
-  @Get('userBased/:id')
+  @Get('organization/:id')
   @UseGuards(AuthGuard('jwt'))
   @ApiOkResponse({ type: [TProject] })
-  async findProjectsByUserId(@Param('id') userId: string): Promise<TProject[]> {
-    return this.projectService.findProjectsByUserId(userId);
+  async findProjectsByOrganizationId(
+    @Param('id') organizationId: string,
+  ): Promise<TProject[]> {
+    return this.projectService.findProjectsByOrganizationId(organizationId);
   }
 
   @Patch(':id')
