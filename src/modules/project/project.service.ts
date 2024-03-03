@@ -84,7 +84,7 @@ export class ProjectService {
   }
 
   async remove(id: string): Promise<{ message: string }> {
-    await this.findOne(id);
+    await this.projectModel.findByIdAndDelete(id);
     return { message: `project with id ${id} deleted` };
   }
 }
