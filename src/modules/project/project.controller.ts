@@ -84,6 +84,16 @@ export class ProjectController {
     return this.projectService.addMembers(id, updateProjectDto);
   }
 
+  @Patch('/remove-members/:id')
+  @UseGuards(AuthGuard('jwt'))
+  @ApiOkResponse(getResponseType(TProject))
+  removeMembers(
+    @Param('id') id: string,
+    @Body() updateProjectDto: { members: string[] },
+  ) {
+    return this.projectService.removeMembers(id, updateProjectDto);
+  }
+
   @Delete(':id')
   remove(@Param('id') id: string) {
     return this.projectService.remove(id);
