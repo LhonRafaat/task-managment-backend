@@ -83,6 +83,22 @@ export class ProjectService {
     });
   }
 
+  async addMembers(
+    id: string,
+    updateProjectDto: { members: string[] },
+  ): Promise<TProject> {
+    await this.findOne(id);
+
+    return await this.projectModel.findByIdAndUpdate(
+      id,
+      { $push: { members: updateProjectDto.members } },
+      {
+        new: true,
+        runValidators: true,
+      },
+    );
+  }
+
   async remove(id: string): Promise<{ message: string }> {
     await this.projectModel.findByIdAndDelete(id);
     return { message: `project with id ${id} deleted` };
