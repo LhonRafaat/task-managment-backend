@@ -54,6 +54,31 @@ export class ProjectService {
     return response;
   }
 
+  async findAllMe(query: IQuery, req: IRequest): Promise<TResponse<TProject>> {
+    const projects = this.projectModel
+      .find({
+        ...req.searchObj,
+        ...req.dateQr,
+        members: req.user._id,
+      })
+      .sort({ [query.sort]: query.orderBy === 'desc' ? -1 : 1 })
+      .select('')
+      .populate('leadUser', 'fullName _id'); // Populate leadUser with name and _id
+
+    const total = await projects.clone().countDocuments();
+
+    projects.limit(+query.limit).skip(req.skip);
+
+    const response: TResponse<TProject> = {
+      result: await projects.exec(),
+      count: total,
+      limit: +query.limit,
+      page: +query.page,
+    };
+
+    return response;
+  }
+
   async findOne(id: string): Promise<TProject> {
     const project = await this.projectModel.findById(id);
 

@@ -44,6 +44,13 @@ export class ProjectController {
     return this.projectService.findAll(query, req);
   }
 
+  @Get('me')
+  @UseGuards(AuthGuard('jwt'))
+  @ApiOkResponse(getResponseType(TProject))
+  findAllMe(@Req() req: IRequest, @Query() query: IQuery) {
+    return this.projectService.findAllMe(query, req);
+  }
+
   @Get(':id')
   @UseGuards(AuthGuard('jwt'))
   @ApiOkResponse(getResponseType(TProject))
