@@ -67,7 +67,7 @@ export class ProjectController {
     return this.projectService.update(id, updateProjectDto);
   }
 
-  @Patch('/add-member/:id')
+  @Patch('/add-members/:id')
   @UseGuards(AuthGuard('jwt'))
   @ApiOkResponse(getResponseType(TProject))
   addMembers(
