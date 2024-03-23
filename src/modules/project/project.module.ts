@@ -8,5 +8,6 @@ import { Project } from './project.schema';
   imports: [MongooseModule.forFeature([{ name: 'Project', schema: Project }])],
   controllers: [ProjectController],
   providers: [ProjectService],
+  exports: [ProjectService],
 })
 export class ProjectModule {}

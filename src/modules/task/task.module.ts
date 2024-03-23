@@ -4,11 +4,13 @@ import { TaskController } from './task.controller';
 import { MongooseModule } from '@nestjs/mongoose';
 import { TaskSchema } from './task.schema';
 import { UsersModule } from '../users/users.module';
+import { ProjectModule } from '../project/project.module';
 
 @Module({
   imports: [
     MongooseModule.forFeature([{ name: 'Task', schema: TaskSchema }]),
     UsersModule,
+    ProjectModule,
   ],
   controllers: [TaskController],
   providers: [TaskService],
