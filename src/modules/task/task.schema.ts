@@ -24,6 +24,11 @@ export const TaskSchema = new Schema<TTask>(
 
       required: true,
     },
+    project: {
+      type: Schema.Types.ObjectId,
+      ref: 'Project',
+      required: true,
+    },
 
     type: {
       type: String,

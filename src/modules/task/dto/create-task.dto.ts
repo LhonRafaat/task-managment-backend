@@ -8,6 +8,11 @@ export class CreateTaskDto {
   title: string;
 
   @ApiProperty()
+  @IsNotEmpty()
+  @IsString()
+  project: string;
+
+  @ApiProperty()
   @IsString()
   priority: string;
 
