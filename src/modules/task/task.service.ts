@@ -6,15 +6,19 @@ import { Model } from 'mongoose';
 import { TTask } from './models/task.model';
 import { IQuery, IRequest, TResponse } from '../../common/helper/common-types';
 import { UsersService } from '../users/users.service';
+import { ProjectService } from '../project/project.service';
 
 @Injectable()
 export class TaskService {
   constructor(
     @InjectModel('Task') private readonly taskModel: Model<TTask>,
     private readonly userService: UsersService,
+    private readonly projectService: ProjectService,
   ) {}
 
   async create(createTaskDto: CreateTaskDto, req: IRequest): Promise<TTask> {
+    if (!(await this.projectService.findOne(createTaskDto.project)))
+      throw new BadRequestException('Project not found');
     if (!(await this.userService.findOne(createTaskDto.assignee)))
       throw new BadRequestException('Assignee not found');
     // TODO: // check if project exist when creating a task
