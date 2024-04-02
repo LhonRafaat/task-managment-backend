@@ -1,5 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsNotEmpty, IsString } from 'class-validator';
+import { IsArray, IsNotEmpty, IsString } from 'class-validator';
 
 export class CreateTaskDto {
   @ApiProperty()
@@ -18,16 +18,18 @@ export class CreateTaskDto {
 
   @ApiProperty()
   @IsString()
-  curentColumn: string;
+  currentColumn: string;
 
   @ApiProperty()
   @IsString()
   description: string;
 
   @ApiProperty()
+  @IsString()
   type: string;
 
   @ApiProperty()
+  @IsArray()
   labels: string[];
 
   @ApiProperty()
@@ -35,8 +37,10 @@ export class CreateTaskDto {
   assignee: string;
 
   @ApiProperty()
+  @IsString()
   startDate: string;
 
   @ApiProperty()
+  @IsString()
   endDate: string;
 }
