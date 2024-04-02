@@ -19,7 +19,6 @@ import {
   IRequest,
   getResponseType,
 } from '../../common/helper/common-types';
-import { TUser } from '../users/user.model';
 import { TTask } from './models/task.model';
 import { AuthGuard } from '@nestjs/passport';
 
@@ -35,7 +34,7 @@ export class TaskController {
   }
 
   @Get()
-  @ApiOkResponse(getResponseType(TUser))
+  @ApiOkResponse(getResponseType(TTask))
   findAll(@Req() req: IRequest, @Query() query: IQuery) {
     return this.taskService.findAll(query, req);
   }
