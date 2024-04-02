@@ -8,13 +8,13 @@ export class TOrganization {
   _id: ObjectId;
 
   @ApiProperty()
-  title: ObjectId;
+  title: string;
 
   @ApiProperty()
-  description: ObjectId;
+  description: string;
 
-  @ApiProperty()
-  owner: ObjectId;
+  @ApiProperty({ type: () => TUser })
+  owner: TUser;
 
   @ApiProperty()
   members: [TUser];
