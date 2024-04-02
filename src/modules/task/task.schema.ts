@@ -32,7 +32,6 @@ export const TaskSchema = new Schema<TTask>(
 
     type: {
       type: String,
-      enum: [TaskTypes.Bug, TaskTypes.Feature],
     },
 
     labels: {
@@ -68,7 +67,6 @@ export const TaskSchema = new Schema<TTask>(
 
     priority: {
       type: String,
-      enum: [Priority.Low, Priority.Medium, Priority.High],
     },
   },
   {
