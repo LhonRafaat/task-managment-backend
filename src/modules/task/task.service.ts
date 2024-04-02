@@ -17,14 +17,17 @@ export class TaskService {
   ) {}
 
   async create(createTaskDto: CreateTaskDto, req: IRequest): Promise<TTask> {
-    if (!(await this.projectService.findOne(createTaskDto.project)))
-      throw new BadRequestException('Project not found');
+    const project = await this.projectService.findOne(createTaskDto.project);
+    if (!project) throw new BadRequestException('Project not found');
     if (!(await this.userService.findOne(createTaskDto.assignee)))
       throw new BadRequestException('Assignee not found');
+
+    const allTasks = await this.taskModel.find().countDocuments();
     // TODO: // check if project exist when creating a task
     return await this.taskModel.create({
       ...createTaskDto,
       reporter: req.user._id,
+      slug: project.title.substring(0, 2) + allTasks,
     });
   }
 
