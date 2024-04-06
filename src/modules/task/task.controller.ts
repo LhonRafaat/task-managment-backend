@@ -33,10 +33,14 @@ export class TaskController {
     return this.taskService.create(createTaskDto, req);
   }
 
-  @Get()
+  @Get('project/:id')
   @ApiOkResponse(getResponseType(TTask))
-  findAll(@Req() req: IRequest, @Query() query: IQuery) {
-    return this.taskService.findAll(query, req);
+  findAll(
+    @Req() req: IRequest,
+    @Query() query: IQuery,
+    @Param('id') id: string,
+  ) {
+    return this.taskService.findAll(query, req, id);
   }
 
   @Get(':id')

@@ -31,15 +31,21 @@ export class TaskService {
     });
   }
 
-  async findAll(query: IQuery, req: IRequest): Promise<TResponse<TTask>> {
+  async findAll(
+    query: IQuery,
+    req: IRequest,
+    projectId: string,
+  ): Promise<TResponse<TTask>> {
     const tasks = this.taskModel
       .find(
         {
           ...req.searchObj,
           ...req.dateQr,
+          project: projectId,
         },
         { password: 0 },
       )
+      .populate(['assignee', 'reporter', 'project'])
       .sort({ [query.sort]: query.orderBy === 'desc' ? -1 : 1 });
 
     const total = await tasks.clone().countDocuments();
