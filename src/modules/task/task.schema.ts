@@ -68,6 +68,10 @@ export const TaskSchema = new Schema<TTask>(
     priority: {
       type: String,
     },
+
+    group: {
+      type: String,
+    },
   },
   {
     timestamps: true,

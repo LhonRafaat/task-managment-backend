@@ -18,6 +18,10 @@ export class CreateTaskDto {
 
   @ApiProperty()
   @IsString()
+  group: string;
+
+  @ApiProperty()
+  @IsString()
   currentColumn: string;
 
   @ApiProperty()

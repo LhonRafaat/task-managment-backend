@@ -16,6 +16,9 @@ export class TTask {
   slug: string;
 
   @ApiProperty()
+  group: string;
+
+  @ApiProperty()
   description: string;
 
   @ApiProperty()
