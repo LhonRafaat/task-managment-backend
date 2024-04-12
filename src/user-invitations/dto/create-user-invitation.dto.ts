@@ -5,5 +5,5 @@ export class CreateUserInvitationDto {
   @ApiProperty()
   @IsArray()
   @IsNotEmpty()
-  emails: string;
+  emails: string[];
 }
