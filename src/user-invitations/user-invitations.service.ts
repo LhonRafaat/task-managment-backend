@@ -31,8 +31,10 @@ export class UserInvitationsService {
     return { message: 'success ' };
   }
 
-  async findAll(): Promise<TUserInvitation[]> {
-    return await this.userInvitationModel.find();
+  async findAll(req: IRequest): Promise<TUserInvitation[]> {
+    return await this.userInvitationModel.find({
+      organization: req.user.organization._id,
+    });
   }
 
   async findOne(id: string): Promise<TUserInvitation> {

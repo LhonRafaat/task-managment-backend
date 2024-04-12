@@ -38,8 +38,8 @@ export class UserInvitationsController {
 
   @Get()
   @UseGuards(AuthGuard('jwt'))
-  findAll() {
-    return this.userInvitationsService.findAll();
+  findAll(@Req() req: IRequest) {
+    return this.userInvitationsService.findAll(req);
   }
 
   @Get(':id')
