@@ -11,6 +11,7 @@ import { CaslModule } from './modules/casl/casl.module';
 import { TaskModule } from './modules/task/task.module';
 import { ProjectModule } from './modules/project/project.module';
 import { OrganizationModule } from './modules/organization/organization.module';
+import { UserInvitationsModule } from './user-invitations/user-invitations.module';
 
 @Module({
   imports: [
@@ -39,6 +40,7 @@ import { OrganizationModule } from './modules/organization/organization.module';
     TaskModule,
     ProjectModule,
     OrganizationModule,
+    UserInvitationsModule,
   ],
   controllers: [AppController],
   providers: [AppService],
