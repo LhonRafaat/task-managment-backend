@@ -37,11 +37,13 @@ export class UserInvitationsController {
   }
 
   @Get()
+  @UseGuards(AuthGuard('jwt'))
   findAll() {
     return this.userInvitationsService.findAll();
   }
 
   @Get(':id')
+  @UseGuards(AuthGuard('jwt'))
   @ApiOkResponse({
     type: TUserInvitation,
   })
@@ -50,6 +52,7 @@ export class UserInvitationsController {
   }
 
   @Patch(':id')
+  @UseGuards(AuthGuard('jwt'))
   @ApiOkResponse({
     type: TUserInvitation,
   })
@@ -61,6 +64,7 @@ export class UserInvitationsController {
   }
 
   @Delete(':id')
+  @UseGuards(AuthGuard('jwt'))
   @ApiOkResponse({
     type: TUserInvitation,
   })
