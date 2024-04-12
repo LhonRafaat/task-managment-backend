@@ -12,7 +12,7 @@ export enum TaskTypes {
   Feature = 'feature',
 }
 
-export const TaskSchema = new Schema<TTask>(
+export const Task = new Schema<TTask>(
   {
     title: {
       type: String,
