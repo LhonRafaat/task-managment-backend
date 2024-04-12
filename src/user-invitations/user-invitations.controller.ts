@@ -46,7 +46,7 @@ export class UserInvitationsController {
     type: TUserInvitation,
   })
   findOne(@Param('id') id: string) {
-    return this.userInvitationsService.findOne(+id);
+    return this.userInvitationsService.findOne(id);
   }
 
   @Patch(':id')
@@ -57,7 +57,7 @@ export class UserInvitationsController {
     @Param('id') id: string,
     @Body() updateUserInvitationDto: UpdateUserInvitationDto,
   ) {
-    return this.userInvitationsService.update(+id, updateUserInvitationDto);
+    return this.userInvitationsService.update(id, updateUserInvitationDto);
   }
 
   @Delete(':id')
@@ -65,6 +65,6 @@ export class UserInvitationsController {
     type: TUserInvitation,
   })
   remove(@Param('id') id: string) {
-    return this.userInvitationsService.remove(+id);
+    return this.userInvitationsService.remove(id);
   }
 }

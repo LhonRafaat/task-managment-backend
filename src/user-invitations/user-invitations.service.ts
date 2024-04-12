@@ -31,19 +31,32 @@ export class UserInvitationsService {
     return { message: 'success ' };
   }
 
-  findAll() {
-    return `This action returns all userInvitations`;
+  async findAll(): Promise<TUserInvitation[]> {
+    return await this.userInvitationModel.find();
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} userInvitation`;
+  async findOne(id: string): Promise<TUserInvitation> {
+    const userInvitation = await this.userInvitationModel.findById(id);
+
+    if (!userInvitation) throw new Error('UserInvitation not found');
+
+    return userInvitation;
   }
 
-  update(id: number, updateUserInvitationDto: UpdateUserInvitationDto) {
-    return `This action updates a #${id} userInvitation`;
+  async update(
+    id: string,
+    updateUserInvitationDto: UpdateUserInvitationDto,
+  ): Promise<TUserInvitation> {
+    await this.findOne(id);
+    return await this.userInvitationModel.findByIdAndUpdate(
+      id,
+      updateUserInvitationDto,
+    );
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} userInvitation`;
+  async remove(id: string): Promise<void> {
+    await this.findOne(id);
+
+    await this.userInvitationModel.findByIdAndDelete(id);
   }
 }
