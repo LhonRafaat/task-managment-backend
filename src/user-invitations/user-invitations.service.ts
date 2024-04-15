@@ -5,12 +5,16 @@ import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { TUserInvitation } from './models/user-invitation.type';
 import { IRequest } from '../common/helper/common-types';
+import { MailerService } from '@nestjs-modules/mailer';
+import { ConfigService } from '@nestjs/config';
 
 @Injectable()
 export class UserInvitationsService {
   constructor(
     @InjectModel('UserInvitation')
     private readonly userInvitationModel: Model<TUserInvitation>,
+    private readonly mailerService: MailerService,
+    private readonly configService: ConfigService,
   ) {}
 
   async create(
@@ -18,7 +22,7 @@ export class UserInvitationsService {
     req: IRequest,
   ): Promise<{ message: string }> {
     for await (const email of createUserInvitationDto.emails) {
-      await this.userInvitationModel.create({
+      const invitation = await this.userInvitationModel.create({
         ...createUserInvitationDto,
         organization: req.user.organization._id,
         email,
@@ -26,9 +30,22 @@ export class UserInvitationsService {
           new Date().toString() + 7 * 24 * 60 * 60 * 1000,
         ).toISOString(),
       });
+
+      this.mailerService
+        .sendMail({
+          to: email, // list of receivers
+          from: 'noreply@taskmanagment.com', // sender address
+          subject: `بانگێشت کراوی بۆ ${req.user.organization.title}`, // Subject line
+          text:
+            this.configService.get('FRONTEND_URL') +
+            `invite?id=` +
+            invitation._id,
+        })
+        .then(() => console.log('Email sent'))
+        .catch((e) => console.log(e));
     }
 
-    return { message: 'success ' };
+    return { message: 'success' };
   }
 
   async findAll(req: IRequest): Promise<TUserInvitation[]> {
