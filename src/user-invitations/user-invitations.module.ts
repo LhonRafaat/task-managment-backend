@@ -12,5 +12,6 @@ import { UserInvitation } from './user-invitation.schema';
   ],
   controllers: [UserInvitationsController],
   providers: [UserInvitationsService],
+  exports: [UserInvitationsService],
 })
 export class UserInvitationsModule {}

@@ -8,12 +8,15 @@ import * as bcrypt from 'bcrypt';
 import { IQuery, IRequest, TResponse } from '../../common/helper/common-types';
 import { OrganizationService } from '../organization/organization.service';
 import { TOrganization } from '../organization/models/organization.model';
+import { AcceptInvitePayload } from '../auth/dto/accept-invite.payload';
+import { UserInvitationsService } from '../../user-invitations/user-invitations.service';
 
 @Injectable()
 export class UsersService {
   constructor(
     @InjectModel('User') private readonly userModel: Model<TUser>,
     private readonly organizationService: OrganizationService,
+    private readonly userInvitationService: UserInvitationsService,
   ) {}
 
   async findAll(req: IRequest, query: IQuery): Promise<TResponse<TUser>> {
@@ -96,6 +99,23 @@ export class UsersService {
         runValidators: true,
       },
     );
+  }
+
+  async joinOrganization(payload: AcceptInvitePayload) {
+    const saltOrRounds = 10;
+    const hashedPassword = await bcrypt.hash(payload.password, saltOrRounds);
+    const invitation = await this.userInvitationService.findOne(
+      payload.invitationId,
+    );
+
+    const user = await this.userModel.create({
+      ...payload,
+      password: hashedPassword,
+      organization: invitation.organization,
+      email: invitation.email,
+    });
+
+    return user;
   }
 
   async findOne(id: string): Promise<TUser> {

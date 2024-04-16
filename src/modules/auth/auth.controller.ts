@@ -3,6 +3,7 @@ import { LoginPayload } from './dto/login.payload';
 import { AuthService } from './auth.service';
 import { RegisterPayload } from './dto/register.payload';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
+import { AcceptInvitePayload } from './dto/accept-invite.payload';
 
 @Controller('auth')
 @ApiTags('Auth')
@@ -18,5 +19,10 @@ export class AuthController {
   @Post('register')
   async register(@Body() payload: RegisterPayload) {
     return await this.authService.register(payload);
+  }
+
+  @Post('register/invite')
+  async registerWithInvite(@Body() payload: AcceptInvitePayload) {
+    return await this.authService.registerWithInvite(payload);
   }
 }
