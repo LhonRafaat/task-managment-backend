@@ -9,6 +9,9 @@ export class TUserInvitation {
   email: string;
 
   @ApiProperty()
+  status: string;
+
+  @ApiProperty()
   organization: TOrganization;
 
   @ApiProperty()
