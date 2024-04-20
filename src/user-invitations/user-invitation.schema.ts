@@ -27,6 +27,7 @@ export const UserInvitation = new Schema(
         InvitationStatus.Approved,
         InvitationStatus.Canceled,
       ],
+      default: InvitationStatus.Pending,
     },
   },
   {
