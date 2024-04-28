@@ -108,15 +108,27 @@ export class UsersService {
     const invitation = await this.userInvitationService.findOne(
       payload.invitationId,
     );
+    const user = await this.findByEmail(invitation.email);
 
-    const user = await this.userModel.create({
-      ...payload,
-      password: hashedPassword,
-      organization: invitation.organization,
-      email: invitation.email,
-    });
-
-    return user;
+    if (!user) {
+      return await this.userModel.create({
+        ...payload,
+        password: hashedPassword,
+        organization: invitation.organization,
+        email: invitation.email,
+      });
+    } else {
+      return await this.userModel.findByIdAndUpdate(
+        user._id,
+        {
+          $push: { organization: invitation.organization },
+        },
+        {
+          new: true,
+          runValidators: true,
+        },
+      );
+    }
   }
 
   async findOne(id: string): Promise<TUser> {
