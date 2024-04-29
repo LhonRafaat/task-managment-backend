@@ -2,7 +2,7 @@ import { BadRequestException, Injectable } from '@nestjs/common';
 import { CreateTaskDto } from './dto/create-task.dto';
 import { UpdateTaskDto } from './dto/update-task.dto';
 import { InjectModel } from '@nestjs/mongoose';
-import { Model } from 'mongoose';
+import mongoose, { Model } from 'mongoose';
 import { TTask } from './models/task.model';
 import { IQuery, IRequest, TResponse } from '../../common/helper/common-types';
 import { UsersService } from '../users/users.service';
@@ -84,5 +84,45 @@ export class TaskService {
     await this.taskModel.findByIdAndDelete(id);
 
     return { message: `Task with id ${id} successfully deleted` };
+  }
+
+  async taskStatus(projectId: string, req: IRequest) {
+    console.log(req.query);
+    const tasks = await this.taskModel.aggregate([
+      {
+        $match: {
+          project: new mongoose.Types.ObjectId(projectId),
+        },
+      },
+
+      {
+        $match:
+          req.query.start && req.query.end
+            ? {
+                createdAt: {
+                  $gte: new Date(req.query.start as string).toISOString(),
+                  $lte: new Date(req.query.end as string).toISOString(),
+                },
+              }
+            : { _id: { $exists: true } },
+      },
+      {
+        $group: {
+          _id: {
+            type: '$type',
+            // priority: '$priority',
+          },
+
+          tasks: {
+            $push: '$$ROOT',
+          },
+
+          count: { $sum: 1 },
+        },
+      },
+    ]);
+
+    console.log(tasks);
+    return tasks;
   }
 }

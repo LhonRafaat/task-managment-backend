@@ -43,6 +43,11 @@ export class TaskController {
     return this.taskService.findAll(query, req, id);
   }
 
+  @Get('status')
+  getStatus(@Req() req: IRequest, @Query('projectId') projectId: string) {
+    return this.taskService.taskStatus(projectId, req);
+  }
+
   @Get(':id')
   @ApiOkResponse({ type: TTask })
   findOne(@Param('id') id: string) {
