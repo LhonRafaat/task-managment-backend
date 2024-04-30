@@ -18,7 +18,7 @@ export class TUser {
   avatar: string;
 
   @ApiProperty()
-  organization: TOrganization;
+  organization: TOrganization[];
 
   @ApiProperty()
   isAdmin: boolean;
