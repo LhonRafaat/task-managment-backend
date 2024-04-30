@@ -7,6 +7,7 @@ import { TUserInvitation } from './models/user-invitation.type';
 import { IRequest } from '../common/helper/common-types';
 import { MailerService } from '@nestjs-modules/mailer';
 import { ConfigService } from '@nestjs/config';
+import { OrganizationService } from '../modules/organization/organization.service';
 
 @Injectable()
 export class UserInvitationsService {
@@ -15,16 +16,19 @@ export class UserInvitationsService {
     private readonly userInvitationModel: Model<TUserInvitation>,
     private readonly mailerService: MailerService,
     private readonly configService: ConfigService,
+    private readonly organizationService: OrganizationService,
   ) {}
 
   async create(
     createUserInvitationDto: CreateUserInvitationDto,
     req: IRequest,
   ): Promise<{ message: string }> {
+    const organization = await this.organizationService.findOne(
+      createUserInvitationDto.organization,
+    );
     for await (const email of createUserInvitationDto.emails) {
       const invitation = await this.userInvitationModel.create({
         ...createUserInvitationDto,
-        organization: req.user.organization._id,
         email,
         expiryDate: new Date(
           new Date().toString() + 7 * 24 * 60 * 60 * 1000,
@@ -35,7 +39,7 @@ export class UserInvitationsService {
         .sendMail({
           to: email, // list of receivers
           from: 'noreply@taskmanagment.com', // sender address
-          subject: `بانگێشت کراوی بۆ ${req.user.organization.title}`, // Subject line
+          subject: `بانگێشت کراوی بۆ ${organization.title}`, // Subject line
           text:
             this.configService.get('FRONTEND_URL') +
             `invite?id=` +
@@ -48,9 +52,9 @@ export class UserInvitationsService {
     return { message: 'success' };
   }
 
-  async findAll(req: IRequest): Promise<TUserInvitation[]> {
+  async findAll(req: IRequest, organization): Promise<TUserInvitation[]> {
     return await this.userInvitationModel.find({
-      organization: req.user.organization._id,
+      organization,
     });
   }
 

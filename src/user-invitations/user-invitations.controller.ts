@@ -36,10 +36,10 @@ export class UserInvitationsController {
     return this.userInvitationsService.create(createUserInvitationDto, req);
   }
 
-  @Get()
+  @Get('organization/:organizationId')
   @UseGuards(AuthGuard('jwt'))
-  findAll(@Req() req: IRequest) {
-    return this.userInvitationsService.findAll(req);
+  findAll(@Req() req: IRequest, @Param('organizationId') organizationId) {
+    return this.userInvitationsService.findAll(req, organizationId);
   }
 
   @Get(':id')
