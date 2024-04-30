@@ -87,7 +87,6 @@ export class TaskService {
   }
 
   async taskStatus(projectId: string, req: IRequest) {
-    console.log(req.query);
     const tasks = await this.taskModel.aggregate([
       {
         $match: {
@@ -99,7 +98,7 @@ export class TaskService {
         $match:
           req.query.start && req.query.end
             ? {
-                createdAt: {
+                startDate: {
                   $gte: new Date(req.query.start as string).toISOString(),
                   $lte: new Date(req.query.end as string).toISOString(),
                 },
@@ -111,10 +110,6 @@ export class TaskService {
           _id: {
             type: '$type',
             // priority: '$priority',
-          },
-
-          tasks: {
-            $push: '$$ROOT',
           },
 
           count: { $sum: 1 },
