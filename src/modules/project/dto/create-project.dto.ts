@@ -9,6 +9,11 @@ export class CreateProjectDto {
 
   @ApiProperty()
   @IsString()
+  @IsNotEmpty()
+  organization: string;
+
+  @ApiProperty()
+  @IsString()
   @IsOptional()
   description: string;
 
