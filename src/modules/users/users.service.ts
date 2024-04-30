@@ -10,6 +10,7 @@ import { OrganizationService } from '../organization/organization.service';
 import { TOrganization } from '../organization/models/organization.model';
 import { AcceptInvitePayload } from '../auth/dto/accept-invite.payload';
 import { UserInvitationsService } from '../../user-invitations/user-invitations.service';
+import { InvitationStatus } from '../../user-invitations/user-invitation.schema';
 
 @Injectable()
 export class UsersService {
@@ -43,12 +44,14 @@ export class UsersService {
   async findMyOrganizationUsers(
     req: IRequest,
     query: IQuery,
+    organizationId: string,
   ): Promise<TResponse<TUser>> {
+    console.log(req.user.organization);
     const users = this.userModel
       .find({
         ...req.searchObj,
         ...req.dateQr,
-        organization: req.user.organization._id,
+        organization: organizationId,
       })
       .sort({ [query.sort]: query.orderBy === 'desc' ? -1 : 1 });
 
@@ -109,6 +112,10 @@ export class UsersService {
       payload.invitationId,
     );
     const user = await this.findByEmail(invitation.email);
+
+    await this.userInvitationService.update(invitation._id, {
+      status: InvitationStatus.Approved,
+    });
 
     if (!user) {
       return await this.userModel.create({

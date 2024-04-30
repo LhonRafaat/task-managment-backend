@@ -48,15 +48,20 @@ export class UsersController {
     return this.usersService.findAll(req, query);
   }
 
-  @Get('/my-organization')
+  @Get('/my-organization/:organizationId')
   @ApiOkResponse(getResponseType(TUser))
   @QueryTypes()
   @UseGuards(AuthGuard('jwt'))
   async findMyOrganizationUsers(
     @Req() req: IRequest,
     @Query() query: IQuery,
+    @Param('organizationId') organizationId: string,
   ): Promise<TResponse<TUser>> {
-    return this.usersService.findMyOrganizationUsers(req, query);
+    return this.usersService.findMyOrganizationUsers(
+      req,
+      query,
+      organizationId,
+    );
   }
 
   @UseGuards(AuthGuard('jwt'))
