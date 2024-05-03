@@ -87,7 +87,7 @@ export class TaskService {
   }
 
   async taskStatus(projectId: string, req: IRequest) {
-    const tasks = await this.taskModel.aggregate([
+    const taskTypes = await this.taskModel.aggregate([
       {
         $match: {
           project: new mongoose.Types.ObjectId(projectId),
@@ -117,7 +117,66 @@ export class TaskService {
       },
     ]);
 
-    console.log(tasks);
-    return tasks;
+    const taskGroups = await this.taskModel.aggregate([
+      {
+        $match: {
+          project: new mongoose.Types.ObjectId(projectId),
+        },
+      },
+
+      {
+        $match:
+          req.query.start && req.query.end
+            ? {
+                startDate: {
+                  $gte: new Date(req.query.start as string).toISOString(),
+                  $lte: new Date(req.query.end as string).toISOString(),
+                },
+              }
+            : { _id: { $exists: true } },
+      },
+      {
+        $group: {
+          _id: {
+            group: '$group',
+            // priority: '$priority',
+          },
+
+          count: { $sum: 1 },
+        },
+      },
+    ]);
+
+    const taskPriorties = await this.taskModel.aggregate([
+      {
+        $match: {
+          project: new mongoose.Types.ObjectId(projectId),
+        },
+      },
+
+      {
+        $match:
+          req.query.start && req.query.end
+            ? {
+                startDate: {
+                  $gte: new Date(req.query.start as string).toISOString(),
+                  $lte: new Date(req.query.end as string).toISOString(),
+                },
+              }
+            : { _id: { $exists: true } },
+      },
+      {
+        $group: {
+          _id: {
+            priority: '$priority',
+            // priority: '$priority',
+          },
+
+          count: { $sum: 1 },
+        },
+      },
+    ]);
+
+    return [...taskTypes, ...taskGroups, ...taskPriorties];
   }
 }
