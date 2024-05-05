@@ -1,5 +1,9 @@
-import { BadRequestException, Injectable } from '@nestjs/common';
-import { UpdateUserDto } from './dto/update-user.dto';
+import {
+  BadRequestException,
+  Injectable,
+  NotAcceptableException,
+} from '@nestjs/common';
+import * as crypto from 'crypto';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { TUser } from './user.model';
@@ -11,13 +15,18 @@ import { TOrganization } from '../organization/models/organization.model';
 import { AcceptInvitePayload } from '../auth/dto/accept-invite.payload';
 import { UserInvitationsService } from '../../user-invitations/user-invitations.service';
 import { InvitationStatus } from '../../user-invitations/user-invitation.schema';
+import { ConfigService } from '@nestjs/config';
+import { IToken } from '../tokens/token.schema';
+import { MailerService } from '@nestjs-modules/mailer';
 
 @Injectable()
 export class UsersService {
   constructor(
     @InjectModel('User') private readonly userModel: Model<TUser>,
+    @InjectModel('Token') private readonly tokenModel: Model<IToken>,
     private readonly organizationService: OrganizationService,
     private readonly userInvitationService: UserInvitationsService,
+    private readonly mailerService: MailerService,
   ) {}
 
   async findAll(req: IRequest, query: IQuery): Promise<TResponse<TUser>> {
@@ -188,5 +197,44 @@ export class UsersService {
     await this.userModel.findByIdAndDelete(id);
 
     return { message: `User with id ${id} deleted` };
+  }
+
+  async forgotPassword({ email }: { email: string }) {
+    const configService = new ConfigService();
+    const user = await this.userModel.findOne({ email });
+    if (!user) {
+      throw new NotAcceptableException(
+        'The account with the provided email does not exist. Please try another one.',
+      );
+    }
+    let token = await this.tokenModel.findOne({
+      user: user._id,
+    });
+    if (!token) {
+      token = await new this.tokenModel({
+        user: user._id,
+        token: crypto.randomBytes(32).toString('hex'),
+      });
+      await token.save();
+    }
+    const link = `${configService.get('FRONTEND_URL')}/reset-password/${
+      user._id
+    }/${token.token}`;
+    try {
+      this.mailerService
+        .sendMail({
+          to: email, // list of receivers
+          from: 'noreply@taskmanagment.com', // sender address
+          subject: `گۆڕینی تێپەڕه وشە `, // Subject line
+          text: link,
+        })
+        .then(() => console.log('Email sent'))
+        .catch((e) => console.log(e));
+    } catch (e) {
+      throw new BadRequestException({
+        message: { en: 'Failed to send email', ku: 'سلاو', ar: 'سلاو' },
+      });
+    }
+    return user;
   }
 }

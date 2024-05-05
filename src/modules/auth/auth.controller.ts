@@ -25,4 +25,8 @@ export class AuthController {
   async registerWithInvite(@Body() payload: AcceptInvitePayload) {
     return await this.authService.registerWithInvite(payload);
   }
+  @Post('/forgot-password')
+  async forgotPassword(@Body() payload: { email: string }) {
+    return await this.authService.forgotPassword(payload);
+  }
 }

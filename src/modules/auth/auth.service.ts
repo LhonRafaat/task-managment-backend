@@ -34,4 +34,8 @@ export class AuthService {
   async registerWithInvite(payload: AcceptInvitePayload) {
     return await this.usersService.joinOrganization(payload);
   }
+
+  async forgotPassword(payload: { email: string }) {
+    return await this.usersService.forgotPassword(payload);
+  }
 }
