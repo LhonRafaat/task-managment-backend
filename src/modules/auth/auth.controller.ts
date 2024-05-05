@@ -1,8 +1,8 @@
-import { Body, Controller, Post } from '@nestjs/common';
+import { Body, Controller, Param, Post } from '@nestjs/common';
 import { LoginPayload } from './dto/login.payload';
 import { AuthService } from './auth.service';
 import { RegisterPayload } from './dto/register.payload';
-import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { AcceptInvitePayload } from './dto/accept-invite.payload';
 
 @Controller('auth')
@@ -28,5 +28,22 @@ export class AuthController {
   @Post('/forgot-password')
   async forgotPassword(@Body() payload: { email: string }) {
     return await this.authService.forgotPassword(payload);
+  }
+
+  @Post('/reset-password/:id/:token')
+  @ApiResponse({
+    status: 200,
+    description: 'Reset Password Request Received',
+  })
+  @ApiResponse({
+    status: 400,
+    description: 'Reset Password Request Failed',
+  })
+  async resetPassword(
+    @Param('id') id: string,
+    @Param('token') token: string,
+    @Body() payload: { password: string },
+  ) {
+    return await this.authService.resetPassword(id, token, payload.password);
   }
 }

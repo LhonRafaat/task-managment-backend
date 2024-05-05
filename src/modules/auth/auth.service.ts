@@ -38,4 +38,8 @@ export class AuthService {
   async forgotPassword(payload: { email: string }) {
     return await this.usersService.forgotPassword(payload);
   }
+
+  async resetPassword(id, token, password) {
+    return await this.usersService.resetPassword(id, token, password);
+  }
 }

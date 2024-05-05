@@ -217,7 +217,7 @@ export class UsersService {
       });
       await token.save();
     }
-    const link = `${configService.get('FRONTEND_URL')}/reset-password/${
+    const link = `${configService.get('FRONTEND_URL')}reset-password/${
       user._id
     }/${token.token}`;
     try {
@@ -236,5 +236,31 @@ export class UsersService {
       });
     }
     return user;
+  }
+
+  async resetPassword(
+    id: string,
+    token: string,
+    password: string,
+  ): Promise<TUser> {
+    const user = await this.userModel.findById(id);
+    if (!user) {
+      throw new NotAcceptableException(
+        'The account with the provided email does not exist. Please try another one.',
+      );
+    }
+    const tokenDoc = await this.tokenModel.findOne({
+      user: user._id,
+      token,
+    });
+    if (!tokenDoc) {
+      throw new NotAcceptableException(
+        'The token provided is invalid. Please try again.',
+      );
+    }
+    user.password = crypto.createHmac('sha256', password).digest('hex');
+    await tokenDoc.deleteOne();
+
+    return await user.save();
   }
 }
