@@ -258,7 +258,10 @@ export class UsersService {
         'The token provided is invalid. Please try again.',
       );
     }
-    user.password = crypto.createHmac('sha256', password).digest('hex');
+
+    const saltOrRounds = 10;
+    const hashedPassword = await bcrypt.hash(password, saltOrRounds);
+    user.password = hashedPassword;
     await tokenDoc.deleteOne();
 
     return await user.save();
