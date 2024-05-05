@@ -13,6 +13,7 @@ import { ProjectModule } from './modules/project/project.module';
 import { OrganizationModule } from './modules/organization/organization.module';
 import { UserInvitationsModule } from './user-invitations/user-invitations.module';
 import { MailerModule } from '@nestjs-modules/mailer';
+import { TokensModule } from './modules/tokens/tokens.module';
 
 @Module({
   imports: [
@@ -66,6 +67,7 @@ import { MailerModule } from '@nestjs-modules/mailer';
     ProjectModule,
     OrganizationModule,
     UserInvitationsModule,
+    TokensModule,
   ],
   controllers: [AppController],
   providers: [AppService],
