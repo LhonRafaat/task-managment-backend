@@ -213,8 +213,18 @@ export class TaskService {
         },
       },
     ]);
+    const totalTasks = await this.taskModel
+      .find({
+        project: new mongoose.Types.ObjectId(projectId),
+        startDate: {
+          $gte: new Date(req.query.start as string).toISOString(),
+          $lte: new Date(req.query.end as string).toISOString(),
+        },
+      })
+      .countDocuments();
 
     return {
+      totalTasks,
       taskStatus: [...taskTypes, ...taskGroups, ...taskPriorties],
       employeeTasks,
     };
