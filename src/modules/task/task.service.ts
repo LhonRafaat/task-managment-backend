@@ -177,6 +177,46 @@ export class TaskService {
       },
     ]);
 
-    return [...taskTypes, ...taskGroups, ...taskPriorties];
+    const employeeTasks = await this.taskModel.aggregate([
+      {
+        $match: {
+          project: new mongoose.Types.ObjectId(projectId),
+        },
+      },
+
+      {
+        $match:
+          req.query.start && req.query.end
+            ? {
+                startDate: {
+                  $gte: new Date(req.query.start as string).toISOString(),
+                  $lte: new Date(req.query.end as string).toISOString(),
+                },
+              }
+            : { _id: { $exists: true } },
+      },
+      {
+        $lookup: {
+          from: 'users',
+          localField: 'assignee',
+          foreignField: '_id',
+          as: 'employee',
+        },
+      },
+
+      { $unwind: '$employee' },
+      {
+        $group: {
+          _id: '$employee.fullName',
+
+          count: { $sum: 1 },
+        },
+      },
+    ]);
+
+    return {
+      taskStatus: [...taskTypes, ...taskGroups, ...taskPriorties],
+      employeeTasks,
+    };
   }
 }
