@@ -155,7 +155,7 @@ export class UsersService {
 
   async findByEmail(email: string): Promise<TUser> {
     const user = await this.userModel.findOne({ email }).select('+password');
-    if (!user) throw new BadRequestException('User not found');
+    // if (!user) throw new BadRequestException('User not found');
     return user;
   }
 
