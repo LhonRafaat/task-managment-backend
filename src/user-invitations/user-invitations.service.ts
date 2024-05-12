@@ -59,7 +59,9 @@ export class UserInvitationsService {
   }
 
   async findOne(id: string): Promise<TUserInvitation> {
-    const userInvitation = await this.userInvitationModel.findById(id);
+    const userInvitation = await this.userInvitationModel
+      .findById(id)
+      .populate('organization');
 
     if (!userInvitation) throw new Error('UserInvitation not found');
 
