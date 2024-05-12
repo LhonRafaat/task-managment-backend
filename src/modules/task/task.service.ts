@@ -94,21 +94,21 @@ export class TaskService {
         },
       },
 
-      {
-        $match:
-          req.query.start && req.query.end
-            ? {
-                startDate: {
-                  $gte: new Date(req.query.start as string).toISOString(),
-                  $lte: new Date(req.query.end as string).toISOString(),
-                },
-              }
-            : { _id: { $exists: true } },
-      },
+      // {
+      //   $match:
+      //     req.query.start && req.query.end
+      //       ? {
+      //           startDate: {
+      //             $gte: new Date(req.query.start as string).toISOString(),
+      //             $lte: new Date(req.query.end as string).toISOString(),
+      //           },
+      //         }
+      //       : { _id: { $exists: true } },
+      // },
       {
         $group: {
           _id: {
-            type: '$type',
+            title: '$type',
             // priority: '$priority',
           },
 
@@ -124,21 +124,21 @@ export class TaskService {
         },
       },
 
-      {
-        $match:
-          req.query.start && req.query.end
-            ? {
-                startDate: {
-                  $gte: new Date(req.query.start as string).toISOString(),
-                  $lte: new Date(req.query.end as string).toISOString(),
-                },
-              }
-            : { _id: { $exists: true } },
-      },
+      // {
+      //   $match:
+      //     req.query.start && req.query.end
+      //       ? {
+      //           startDate: {
+      //             $gte: new Date(req.query.start as string).toISOString(),
+      //             $lte: new Date(req.query.end as string).toISOString(),
+      //           },
+      //         }
+      //       : { _id: { $exists: true } },
+      // },
       {
         $group: {
           _id: {
-            group: '$group',
+            title: '$group',
             // priority: '$priority',
           },
 
@@ -154,21 +154,21 @@ export class TaskService {
         },
       },
 
-      {
-        $match:
-          req.query.start && req.query.end
-            ? {
-                startDate: {
-                  $gte: new Date(req.query.start as string).toISOString(),
-                  $lte: new Date(req.query.end as string).toISOString(),
-                },
-              }
-            : { _id: { $exists: true } },
-      },
+      // {
+      //   $match:
+      //     req.query.start && req.query.end
+      //       ? {
+      //           startDate: {
+      //             $gte: new Date(req.query.start as string).toISOString(),
+      //             $lte: new Date(req.query.end as string).toISOString(),
+      //           },
+      //         }
+      //       : { _id: { $exists: true } },
+      // },
       {
         $group: {
           _id: {
-            priority: '$priority',
+            title: '$priority',
             // priority: '$priority',
           },
 
@@ -177,6 +177,14 @@ export class TaskService {
       },
     ]);
 
+    const thisMonthStart = new Date();
+    thisMonthStart.setDate(1);
+    thisMonthStart.setHours(0, 0, 0, 0);
+    const thisMonthEnd = new Date();
+    thisMonthEnd.setMonth(thisMonthEnd.getMonth() + 1);
+    thisMonthEnd.setDate(0);
+    thisMonthEnd.setHours(0, 0, 0, 0);
+
     const employeeTasks = await this.taskModel.aggregate([
       {
         $match: {
@@ -184,17 +192,17 @@ export class TaskService {
         },
       },
 
-      {
-        $match:
-          req.query.start && req.query.end
-            ? {
-                startDate: {
-                  $gte: new Date(req.query.start as string).toISOString(),
-                  $lte: new Date(req.query.end as string).toISOString(),
-                },
-              }
-            : { _id: { $exists: true } },
-      },
+      // {
+      //   $match:
+      //     req.query.start && req.query.end
+      //       ? {
+      //           startDate: {
+      //             $gte: new Date(req.query.start as string).toISOString(),
+      //             $lte: new Date(req.query.end as string).toISOString(),
+      //           },
+      //         }
+      //       : { _id: { $exists: true } },
+      // },
       {
         $lookup: {
           from: 'users',
@@ -216,10 +224,10 @@ export class TaskService {
     const totalTasks = await this.taskModel
       .find({
         project: new mongoose.Types.ObjectId(projectId),
-        startDate: {
-          $gte: new Date(req.query.start as string).toISOString(),
-          $lte: new Date(req.query.end as string).toISOString(),
-        },
+        // startDate: {
+        //   $gte: new Date(req.query.start as string).toISOString(),
+        //   $lte: new Date(req.query.end as string).toISOString(),
+        // },
       })
       .countDocuments();
 
