@@ -1,14 +1,14 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsNotEmpty, IsString } from 'class-validator';
+import { IsNotEmpty, IsOptional, IsString } from 'class-validator';
 
 export class AcceptInvitePayload {
   @ApiProperty()
-  @IsNotEmpty()
+  @IsOptional()
   @IsString()
   fullName: string;
 
   @ApiProperty()
-  @IsNotEmpty()
+  @IsOptional()
   @IsString()
   password: string;
 
@@ -18,6 +18,6 @@ export class AcceptInvitePayload {
   invitationId: string;
 
   @ApiProperty()
-  @IsString()
+  @IsOptional()
   avatar: string;
 }
