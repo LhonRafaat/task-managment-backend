@@ -36,6 +36,18 @@ export class UserInvitationsController {
     return this.userInvitationsService.create(createUserInvitationDto, req);
   }
 
+  @Post('reinvite')
+  @UseGuards(AuthGuard('jwt'))
+  @ApiOkResponse({
+    type: TUserInvitation,
+  })
+  reinvite(
+    @Body() createUserInvitationDto: CreateUserInvitationDto,
+    @Req() req: IRequest,
+  ) {
+    return this.userInvitationsService.reinvite(createUserInvitationDto, req);
+  }
+
   @Get('organization/:organizationId')
   @UseGuards(AuthGuard('jwt'))
   findAll(@Req() req: IRequest, @Param('organizationId') organizationId) {
