@@ -185,4 +185,8 @@ export class UserInvitationsService {
 
     await this.userInvitationModel.findByIdAndDelete(id);
   }
+
+  async deleteAll() {
+    await this.userInvitationModel.deleteMany({});
+  }
 }

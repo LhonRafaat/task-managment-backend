@@ -75,6 +75,14 @@ export class UserInvitationsController {
     return this.userInvitationsService.update(id, updateUserInvitationDto);
   }
 
+  @Delete('')
+  @ApiOkResponse({
+    type: TUserInvitation,
+  })
+  deleteAll() {
+    return this.userInvitationsService.deleteAll();
+  }
+
   @Delete(':id')
   @UseGuards(AuthGuard('jwt'))
   @ApiOkResponse({
