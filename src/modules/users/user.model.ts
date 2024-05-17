@@ -21,9 +21,6 @@ export class TUser {
   organization: TOrganization[];
 
   @ApiProperty()
-  isAdmin: boolean;
-
-  @ApiProperty()
   createdAt: string;
 
   @ApiProperty()

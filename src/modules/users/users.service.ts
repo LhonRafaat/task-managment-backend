@@ -93,7 +93,6 @@ export class UsersService {
     const user = await this.userModel.create({
       ...payload,
       password: hashedPassword,
-      isAdmin: true,
       organization: null,
     });
 
