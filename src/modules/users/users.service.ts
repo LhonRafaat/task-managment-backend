@@ -5,7 +5,7 @@ import {
 } from '@nestjs/common';
 import * as crypto from 'crypto';
 import { InjectModel } from '@nestjs/mongoose';
-import { Model } from 'mongoose';
+import mongoose, { Model } from 'mongoose';
 import { TUser } from './user.model';
 import { RegisterPayload } from '../auth/dto/register.payload';
 import * as bcrypt from 'bcrypt';
@@ -119,6 +119,8 @@ export class UsersService {
     const invitation = await this.userInvitationService.findOne(
       payload.invitationId,
     );
+    if (invitation.status !== InvitationStatus.Pending)
+      throw new BadRequestException('basarchwa');
     const user = await this.findByEmail(invitation.email);
 
     await this.userInvitationService.update(invitation._id, {
@@ -168,13 +170,12 @@ export class UsersService {
     id: string,
     updateUserDto: { organizationId: string },
   ): Promise<TUser> {
-    return this.userModel
-      .findByIdAndUpdate(
-        id,
-        { $pull: { organization: updateUserDto.organizationId } },
-        { new: true, runValidators: true },
-      )
-      .exec();
+    const user = await this.userModel.findById(id);
+    user.organization = user.organization.filter(
+      (el) => el.toString() !== updateUserDto.organizationId.toString(),
+    );
+
+    return await user.save();
   }
 
   async changePassword(

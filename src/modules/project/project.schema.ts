@@ -16,7 +16,6 @@ export const Project = new Schema(
     },
     description: {
       type: String,
-      required: true,
     },
     organization: {
       type: Schema.Types.ObjectId,
