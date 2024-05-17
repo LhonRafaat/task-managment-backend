@@ -5,7 +5,6 @@ export const Token = new Schema<IToken>({
   user: { type: Schema.Types.ObjectId, ref: 'User', required: false },
   email: {
     type: String,
-    unique: true,
   },
 });
 
