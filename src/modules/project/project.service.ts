@@ -102,7 +102,7 @@ export class ProjectService {
         .find({
           organization: organizationId,
         })
-        .populate(['members', 'leaderUser'])
+        .populate(['members', 'leadUser'])
         .exec();
     } else {
       return this.projectModel
