@@ -82,7 +82,7 @@ export class ProjectService {
   }
 
   async findOne(id: string): Promise<TProject> {
-    const project = await this.projectModel.findById(id);
+    const project = await this.projectModel.findById(id).populate('members');
 
     if (!project) throw new BadRequestException('Project not found');
 
@@ -102,7 +102,7 @@ export class ProjectService {
         .find({
           organization: organizationId,
         })
-        .populate('leadUser', 'fullName _id')
+        .populate(['members', 'leaderUser'])
         .exec();
     } else {
       return this.projectModel
