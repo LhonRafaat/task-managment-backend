@@ -5,11 +5,13 @@ import { InjectModel } from '@nestjs/mongoose';
 import { IQuery, IRequest, TResponse } from '../../common/helper/common-types';
 import { TProject } from './models/project.model';
 import { Model } from 'mongoose';
+import { OrganizationService } from '../organization/organization.service';
 
 @Injectable()
 export class ProjectService {
   constructor(
     @InjectModel('Project') private readonly projectModel: Model<TProject>,
+    private readonly organizationService: OrganizationService,
   ) {}
   async create(
     createProjectDto: CreateProjectDto,
@@ -89,11 +91,28 @@ export class ProjectService {
 
   async findProjectsByOrganizationId(
     organizationId: string,
+    req: IRequest,
   ): Promise<TProject[]> {
-    return this.projectModel
-      .find({ organization: organizationId })
-      .populate('leadUser', 'fullName _id')
-      .exec();
+    const organization = await this.organizationService.findOne(organizationId);
+
+    const isAdmin =
+      req.user?._id?.toString() === organization.owner?.toString();
+    if (isAdmin) {
+      return this.projectModel
+        .find({
+          organization: organizationId,
+        })
+        .populate('leadUser', 'fullName _id')
+        .exec();
+    } else {
+      return this.projectModel
+        .find({
+          organization: organizationId,
+          members: { $in: [req.user._id] },
+        })
+        .populate('leadUser', 'fullName _id')
+        .exec();
+    }
   }
 
   async update(

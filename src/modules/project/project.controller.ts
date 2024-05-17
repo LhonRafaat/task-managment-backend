@@ -63,8 +63,12 @@ export class ProjectController {
   @ApiOkResponse({ type: [TProject] })
   async findProjectsByOrganizationId(
     @Param('id') organizationId: string,
+    @Req() req: IRequest,
   ): Promise<TProject[]> {
-    return this.projectService.findProjectsByOrganizationId(organizationId);
+    return this.projectService.findProjectsByOrganizationId(
+      organizationId,
+      req,
+    );
   }
 
   @Patch(':id')
