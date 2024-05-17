@@ -88,7 +88,7 @@ export class UsersController {
     return this.usersService.update(id, updateUserDto);
   }
 
-  @Patch('/remove-organization/:id')
+  @Patch('/remove-from-organization/:id')
   @ApiOkResponse({ type: TUser })
   @UseGuards(AuthGuard('jwt'), AbilitiesGuard)
   async removeFromOrganization(
