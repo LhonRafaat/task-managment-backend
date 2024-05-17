@@ -71,6 +71,16 @@ export class UsersController {
     return req.user;
   }
 
+  @UseGuards(AuthGuard('jwt'))
+  @ApiOkResponse({ type: TUser })
+  @Get('check-is-owner/:organizationId')
+  checkIsOwner(
+    @Req() req: IRequest,
+    @Param('organizationId') organizationId: string,
+  ): Promise<{ isOwner: boolean }> {
+    return this.usersService.checkIsOwner(req, organizationId);
+  }
+
   @Get(':id')
   @UseGuards(AuthGuard('jwt'))
   @ApiOkResponse({ type: TUser })

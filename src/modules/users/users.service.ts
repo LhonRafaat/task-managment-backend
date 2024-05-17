@@ -278,4 +278,15 @@ export class UsersService {
 
     return await user.save();
   }
+
+  async checkIsOwner(
+    req: IRequest,
+    organizationId: string,
+  ): Promise<{ isOwner: boolean }> {
+    const organization = await this.organizationService.findOne(organizationId);
+
+    return {
+      isOwner: organization.owner?.toString() === req.user._id?.toString(),
+    };
+  }
 }
