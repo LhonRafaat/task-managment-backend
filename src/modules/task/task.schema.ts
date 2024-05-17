@@ -21,8 +21,6 @@ export const Task = new Schema<TTask>(
     },
     description: {
       type: String,
-
-      required: true,
     },
     project: {
       type: Schema.Types.ObjectId,
