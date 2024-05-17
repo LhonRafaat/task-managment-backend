@@ -88,6 +88,16 @@ export class UsersController {
     return this.usersService.update(id, updateUserDto);
   }
 
+  @Patch('/remove-organization/:id')
+  @ApiOkResponse({ type: TUser })
+  @UseGuards(AuthGuard('jwt'), AbilitiesGuard)
+  async removeFromOrganization(
+    @Param('id') id: string,
+    @Body() updateUserDto: { organizationId: string },
+  ): Promise<TUser> {
+    return this.usersService.removeFromOrganization(id, updateUserDto);
+  }
+
   @Patch('change-password/:id')
   @ApiOkResponse({ type: TUser })
   @UseGuards(AuthGuard('jwt'), AbilitiesGuard)

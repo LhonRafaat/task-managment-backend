@@ -165,6 +165,19 @@ export class UsersService {
       .exec();
   }
 
+  async removeFromOrganization(
+    id: string,
+    updateUserDto: { organizationId: string },
+  ): Promise<TUser> {
+    return this.userModel
+      .findByIdAndUpdate(
+        id,
+        { $pull: { organization: updateUserDto.organizationId } },
+        { new: true, runValidators: true },
+      )
+      .exec();
+  }
+
   async changePassword(
     id: string,
     currentPassword: string,
