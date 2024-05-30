@@ -233,7 +233,8 @@ export class TaskService {
 
     return {
       totalTasks,
-      taskStatus: [...taskTypes, ...taskGroups, ...taskPriorties],
+      taskTypes,
+      taskPriorties,
       employeeTasks,
     };
   }
