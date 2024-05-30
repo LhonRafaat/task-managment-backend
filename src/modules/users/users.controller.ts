@@ -8,6 +8,7 @@ import {
   Query,
   Patch,
   Body,
+  Post,
 } from '@nestjs/common';
 import { UsersService } from './users.service';
 import {
@@ -73,7 +74,7 @@ export class UsersController {
 
   @UseGuards(AuthGuard('jwt'))
   @ApiOkResponse({ type: TUser })
-  @Get('check-is-owner/:organizationId')
+  @Post('check-is-owner/:organizationId')
   checkIsOwner(
     @Req() req: IRequest,
     @Param('organizationId') organizationId: string,

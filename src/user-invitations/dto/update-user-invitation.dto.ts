@@ -1,5 +1,4 @@
-import { ApiProperty, PartialType } from '@nestjs/swagger';
-import { CreateUserInvitationDto } from './create-user-invitation.dto';
+import { ApiProperty } from '@nestjs/swagger';
 
 export class UpdateUserInvitationDto {
   @ApiProperty()
