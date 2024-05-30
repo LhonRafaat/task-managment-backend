@@ -173,11 +173,14 @@ export class UserInvitationsService {
     id: string,
     updateUserInvitationDto: UpdateUserInvitationDto,
   ): Promise<TUserInvitation> {
-    await this.findOne(id);
-    return await this.userInvitationModel.findByIdAndUpdate(
+    const doc = await this.findOne(id);
+    await this.userInvitationModel.findByIdAndUpdate(
       id,
       updateUserInvitationDto,
     );
+    await this.userInvitationModel.findByIdAndDelete(doc._id);
+
+    return doc;
   }
 
   async remove(id: string): Promise<void> {
