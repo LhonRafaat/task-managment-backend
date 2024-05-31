@@ -6,12 +6,14 @@ import { IQuery, IRequest, TResponse } from '../../common/helper/common-types';
 import { TProject } from './models/project.model';
 import { Model } from 'mongoose';
 import { OrganizationService } from '../organization/organization.service';
+import { ProducerService } from '../../queues/producer';
 
 @Injectable()
 export class ProjectService {
   constructor(
     @InjectModel('Project') private readonly projectModel: Model<TProject>,
     private readonly organizationService: OrganizationService,
+    private readonly ProducerService: ProducerService,
   ) {}
   async create(
     createProjectDto: CreateProjectDto,
@@ -21,7 +23,7 @@ export class ProjectService {
       { ...req.query, limit: 100000 } as IQuery,
       req,
     );
-    return await this.projectModel.create({
+    const created = await this.projectModel.create({
       ...createProjectDto,
       slug:
         createProjectDto.title.substring(0, 3).toUpperCase() +
@@ -30,6 +32,14 @@ export class ProjectService {
 
       boardColumns: ['backlog'],
     });
+
+    await this.ProducerService.addToBotQueue({
+      type: 'project',
+      projectId: created._id,
+      projectTitle: created.title,
+    });
+
+    return created;
   }
 
   async findAll(query: IQuery, req: IRequest): Promise<TResponse<TProject>> {
