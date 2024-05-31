@@ -14,6 +14,7 @@ import { OrganizationModule } from './modules/organization/organization.module';
 import { UserInvitationsModule } from './user-invitations/user-invitations.module';
 import { MailerModule } from '@nestjs-modules/mailer';
 import { TokensModule } from './modules/tokens/tokens.module';
+import { NotificationsModule } from './modules/notifications/notifications.module';
 
 @Module({
   imports: [
@@ -68,6 +69,7 @@ import { TokensModule } from './modules/tokens/tokens.module';
     OrganizationModule,
     UserInvitationsModule,
     TokensModule,
+    NotificationsModule,
   ],
   controllers: [AppController],
   providers: [AppService],
