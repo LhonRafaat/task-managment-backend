@@ -8,6 +8,7 @@ import { IQuery, IRequest, TResponse } from '../../common/helper/common-types';
 import { UsersService } from '../users/users.service';
 import { ProjectService } from '../project/project.service';
 import { NotificationsGateway } from '../notifications/notifications.gateway';
+import { ProducerService } from '../../queues/producer';
 
 @Injectable()
 export class TaskService {
@@ -16,6 +17,7 @@ export class TaskService {
     private readonly userService: UsersService,
     private readonly projectService: ProjectService,
     private readonly notificationGateway: NotificationsGateway,
+    private readonly ProducerService: ProducerService,
   ) {}
 
   async create(createTaskDto: CreateTaskDto, req: IRequest): Promise<TTask> {
@@ -31,6 +33,20 @@ export class TaskService {
       ...createTaskDto,
       reporter: req.user._id,
       slug: project.title.substring(0, 2) + allTasks + Math.random(),
+    });
+
+    const taskDoc = await this.taskModel
+      .findById(created._id)
+      .populate(['assignee', 'reporter']);
+
+    await this.ProducerService.addToBotQueue({
+      type: 'task',
+      taskId: created._id,
+      taskTitle: created.title,
+      content: created.description,
+      projectTitle: project.title,
+      reporter: taskDoc.reporter.fullName,
+      assignee: taskDoc.assignee.fullName,
     });
 
     await this.notificationGateway.emitTaskNotification({
