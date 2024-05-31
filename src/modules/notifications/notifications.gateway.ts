@@ -25,11 +25,10 @@ export class NotificationsGateway {
   emitTaskNotification(
     @MessageBody() createNotificationDto: CreateNotificationDto,
   ) {
+    console.log('here');
     this.server.emit('notification', createNotificationDto);
-    return this.notificationsService.create(createNotificationDto);
-  }
+    console.log('here2');
 
-  findAll(@Req() req: IRequest) {
-    return this.notificationsService.findAll(req);
+    return this.notificationsService.create(createNotificationDto);
   }
 }
