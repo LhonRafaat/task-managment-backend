@@ -22,12 +22,10 @@ export class NotificationsGateway {
   constructor(private readonly notificationsService: NotificationsService) {}
 
   @SubscribeMessage('createNotification')
-  emitTaskNotification(
+  async emitTaskNotification(
     @MessageBody() createNotificationDto: CreateNotificationDto,
   ) {
-    console.log('here');
-    this.server.emit('notification', createNotificationDto);
-    console.log('here2');
+    await this.server.emit('notification', createNotificationDto);
 
     return this.notificationsService.create(createNotificationDto);
   }

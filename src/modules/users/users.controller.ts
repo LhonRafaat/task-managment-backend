@@ -127,8 +127,6 @@ export class UsersController {
   @UseGuards(AuthGuard('jwt'), AbilitiesGuard)
   @checkAbilities({ action: Action.Delete, subject: TUser })
   remove(@Param('id') id: string) {
-    console.log('id', id);
-
     return this.usersService.remove(id);
   }
 }

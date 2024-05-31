@@ -30,7 +30,7 @@ export class TaskService {
     const created = await this.taskModel.create({
       ...createTaskDto,
       reporter: req.user._id,
-      slug: project.title.substring(0, 2) + allTasks,
+      slug: project.title.substring(0, 2) + allTasks + Math.random(),
     });
 
     await this.notificationGateway.emitTaskNotification({

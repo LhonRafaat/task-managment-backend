@@ -55,7 +55,6 @@ export class UsersService {
     query: IQuery,
     organizationId: string,
   ): Promise<TResponse<TUser>> {
-    console.log(req.user.organization);
     const users = this.userModel
       .find({
         ...req.searchObj,
@@ -189,7 +188,6 @@ export class UsersService {
     // check if current password is correct
     const isMatch = await bcrypt.compare(currentPassword, user.password);
     if (!isMatch) {
-      console.log('not isMatch');
       throw new BadRequestException('Incorrect password');
     }
 
@@ -204,8 +202,6 @@ export class UsersService {
   }
 
   async remove(id: string): Promise<{ message: string }> {
-    console.log('id', id);
-
     // await this.findOne(id);
     await this.userModel.findByIdAndDelete(id);
 
