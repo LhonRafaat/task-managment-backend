@@ -7,6 +7,7 @@ import { TTask } from './models/task.model';
 import { IQuery, IRequest, TResponse } from '../../common/helper/common-types';
 import { UsersService } from '../users/users.service';
 import { ProjectService } from '../project/project.service';
+import { NotificationsGateway } from '../notifications/notifications.gateway';
 
 @Injectable()
 export class TaskService {
@@ -14,6 +15,7 @@ export class TaskService {
     @InjectModel('Task') private readonly taskModel: Model<TTask>,
     private readonly userService: UsersService,
     private readonly projectService: ProjectService,
+    private readonly notificationGateway: NotificationsGateway,
   ) {}
 
   async create(createTaskDto: CreateTaskDto, req: IRequest): Promise<TTask> {
@@ -23,12 +25,22 @@ export class TaskService {
       throw new BadRequestException('Assignee not found');
 
     const allTasks = await this.taskModel.find().countDocuments();
+
     // TODO: // check if project exist when creating a task
-    return await this.taskModel.create({
+    const created = await this.taskModel.create({
       ...createTaskDto,
       reporter: req.user._id,
       slug: project.title.substring(0, 2) + allTasks,
     });
+
+    await this.notificationGateway.emitTaskNotification({
+      title: 'ئەرکی نوێت هەیە!',
+      content: created.title,
+      projectId: project._id,
+      userId: createTaskDto.assignee,
+      taskId: created._id,
+    });
+    return created;
   }
 
   async findAll(
