@@ -6,4 +6,5 @@ export const Notification = new Schema({
   userId: { type: String, required: true },
   projectId: { type: Schema.Types.ObjectId, required: true, ref: 'Project' },
   taskId: { type: Schema.Types.ObjectId, required: true, ref: 'Task' },
+  type: { type: String, required: true },
 });

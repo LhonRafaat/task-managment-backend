@@ -15,4 +15,7 @@ export class TNotification {
 
   @ApiProperty()
   taskId: string;
+
+  @ApiProperty()
+  type: string;
 }

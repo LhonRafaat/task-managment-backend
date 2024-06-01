@@ -26,4 +26,9 @@ export class CreateNotificationDto {
   @IsString()
   @IsNotEmpty()
   taskId: string;
+
+  @ApiProperty()
+  @IsString()
+  @IsNotEmpty()
+  type: string;
 }

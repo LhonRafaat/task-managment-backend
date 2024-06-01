@@ -55,6 +55,7 @@ export class TaskService {
       projectId: project._id,
       userId: createTaskDto.assignee,
       taskId: created._id,
+      type: 'success',
     });
     return created;
   }
@@ -109,6 +110,15 @@ export class TaskService {
       .findById(id)
       .populate(['assignee', 'reporter', 'project']);
 
+    await this.notificationGateway.emitTaskNotification({
+      title: 'ئەرک نوێ کرایەوە',
+      content: taskDoc.title,
+      projectId: taskDoc.project._id,
+      userId: taskDoc.assignee._id,
+      taskId: taskDoc._id,
+      type: 'success',
+    });
+
     if (updateTaskDto.currentColumn) {
       await this.ProducerService.addToBotQueue({
         type: 'task',
@@ -127,6 +137,27 @@ export class TaskService {
   async remove(id: string): Promise<{ message: string }> {
     await this.findOne(id);
 
+    const taskDoc = await this.taskModel
+      .findById(id)
+      .populate(['assignee', 'reporter', 'project']);
+    await this.ProducerService.addToBotQueue({
+      type: 'task',
+      taskId: taskDoc._id,
+      taskTitle: taskDoc.title,
+      content: `  سڕیایەوە    "${taskDoc._id}"`,
+      projectTitle: taskDoc.project.title,
+      reporter: taskDoc.reporter.fullName,
+      assignee: taskDoc.assignee.fullName,
+    });
+
+    await this.notificationGateway.emitTaskNotification({
+      title: 'ئەرک سڕایەوە!',
+      content: taskDoc.title,
+      projectId: taskDoc.project._id,
+      userId: taskDoc.assignee._id,
+      taskId: taskDoc._id,
+      type: 'error',
+    });
     await this.taskModel.findByIdAndDelete(id);
 
     return { message: `Task with id ${id} successfully deleted` };
