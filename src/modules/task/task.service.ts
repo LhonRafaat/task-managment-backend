@@ -100,10 +100,28 @@ export class TaskService {
 
   async update(id: string, updateTaskDto: UpdateTaskDto): Promise<TTask> {
     await this.findOne(id);
-    return await this.taskModel.findByIdAndUpdate(id, updateTaskDto, {
+    const updated = await this.taskModel.findByIdAndUpdate(id, updateTaskDto, {
       new: true,
       runValidators: true,
     });
+
+    const taskDoc = await this.taskModel
+      .findById(id)
+      .populate(['assignee', 'reporter', 'project']);
+
+    if (updateTaskDto.currentColumn) {
+      await this.ProducerService.addToBotQueue({
+        type: 'task',
+        taskId: updated._id,
+        taskTitle: updated.title,
+        content: `گوازرایەوە بۆ "${updated.currentColumn}"`,
+        projectTitle: taskDoc.project.title,
+        reporter: taskDoc.reporter.fullName,
+        assignee: taskDoc.assignee.fullName,
+      });
+    }
+
+    return updated;
   }
 
   async remove(id: string): Promise<{ message: string }> {
