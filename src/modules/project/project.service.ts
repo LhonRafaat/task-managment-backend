@@ -30,7 +30,7 @@ export class ProjectService {
         count.result.length +
         1,
 
-      boardColumns: ['تەواو بووە', 'لە کارکردندایە', 'سەرەتا'],
+      boardColumns: ['سەرەتا', 'لە کارکردندایە'],
     });
 
     await this.ProducerService.addToBotQueue({
