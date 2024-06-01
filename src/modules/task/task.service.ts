@@ -280,6 +280,7 @@ export class TaskService {
     return {
       totalTasks,
       taskTypes,
+      taskGroups,
       taskPriorties,
       employeeTasks,
     };
