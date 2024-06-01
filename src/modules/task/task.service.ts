@@ -56,6 +56,7 @@ export class TaskService {
       userId: createTaskDto.assignee,
       taskId: created._id,
       type: 'success',
+      description: taskDoc.description,
     });
     return created;
   }
@@ -117,6 +118,7 @@ export class TaskService {
       userId: taskDoc.assignee._id,
       taskId: taskDoc._id,
       type: 'success',
+      description: taskDoc.description,
     });
 
     if (updateTaskDto.currentColumn) {
@@ -157,6 +159,7 @@ export class TaskService {
       userId: taskDoc.assignee._id,
       taskId: taskDoc._id,
       type: 'error',
+      description: taskDoc.description,
     });
     await this.taskModel.findByIdAndDelete(id);
 

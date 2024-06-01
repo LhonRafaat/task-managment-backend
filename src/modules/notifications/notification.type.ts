@@ -2,6 +2,9 @@ import { ApiProperty } from '@nestjs/swagger';
 
 export class TNotification {
   @ApiProperty()
+  _id: string;
+
+  @ApiProperty()
   title: string;
 
   @ApiProperty()
@@ -18,4 +21,16 @@ export class TNotification {
 
   @ApiProperty()
   type: string;
+
+  @ApiProperty()
+  read: boolean;
+
+  @ApiProperty()
+  description: string;
+
+  @ApiProperty()
+  createdAt: string;
+
+  @ApiProperty()
+  updatedAt: string;
 }
