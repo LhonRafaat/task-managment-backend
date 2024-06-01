@@ -18,7 +18,8 @@ export class NotificationsService {
 
   async findAll(req: IRequest) {
     return await this.notificationModel
-      .find({ userId: req.user._id })
-      .populate(['projectId', 'taskId']);
+      .find({ userId: req.user._id, projectId: req.query?.projectId })
+      .populate(['projectId', 'taskId'])
+      .sort({ createdAt: -1 });
   }
 }

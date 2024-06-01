@@ -73,6 +73,8 @@ export class OrganizationService {
   async remove(id: string): Promise<{ message: string }> {
     await this.findOne(id);
 
+    await this.organizationModel.findByIdAndDelete(id);
+
     return { message: `Organization with id ${id} deleted` };
   }
 }
