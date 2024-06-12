@@ -1,5 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { TUser } from '../../users/user.model';
+import { TProject } from '../../project/models/project.model';
 
 export class TTask {
   @ApiProperty()
@@ -15,7 +16,13 @@ export class TTask {
   slug: string;
 
   @ApiProperty()
+  group: string;
+
+  @ApiProperty()
   description: string;
+
+  @ApiProperty()
+  project: TProject;
 
   @ApiProperty()
   type: string;

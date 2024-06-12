@@ -11,6 +11,10 @@ import { CaslModule } from './modules/casl/casl.module';
 import { TaskModule } from './modules/task/task.module';
 import { ProjectModule } from './modules/project/project.module';
 import { OrganizationModule } from './modules/organization/organization.module';
+import { UserInvitationsModule } from './user-invitations/user-invitations.module';
+import { MailerModule } from '@nestjs-modules/mailer';
+import { TokensModule } from './modules/tokens/tokens.module';
+import { NotificationsModule } from './modules/notifications/notifications.module';
 
 @Module({
   imports: [
@@ -22,6 +26,11 @@ import { OrganizationModule } from './modules/organization/organization.module';
         DB_URL: Joi.string().required(),
         JWT_SECRET: Joi.string().required(),
         JWT_EXPIRATION: Joi.string().required(),
+        E_HOST: Joi.string().required(),
+        E_SERVICE: Joi.string().required(),
+        E_USER: Joi.string().required(),
+        E_PASS: Joi.string().required(),
+        FRONTEND_URL: Joi.string().required(),
       }),
     }),
     MongooseModule.forRootAsync({
@@ -32,6 +41,25 @@ import { OrganizationModule } from './modules/organization/organization.module';
         useUnifiedTopology: true,
       }),
     }),
+    MailerModule.forRootAsync({
+      inject: [ConfigService],
+      useFactory: (configService: ConfigService) => {
+        return {
+          transport: {
+            host: configService.get('E_HOST'),
+            service: configService.get('E_SERVICE'),
+            secure: true,
+            auth: {
+              user: configService.get('E_USER'),
+              pass: configService.get('E_PASS'),
+            },
+          },
+          defaults: {
+            from: '"task-managment" <taskmanagment@comp.com>',
+          },
+        };
+      },
+    }),
 
     UsersModule,
     AuthModule,
@@ -39,6 +67,9 @@ import { OrganizationModule } from './modules/organization/organization.module';
     TaskModule,
     ProjectModule,
     OrganizationModule,
+    UserInvitationsModule,
+    TokensModule,
+    NotificationsModule,
   ],
   controllers: [AppController],
   providers: [AppService],

@@ -6,8 +6,20 @@ export const Project = new Schema(
       type: String,
       required: true,
     },
+    type: {
+      type: String,
+      required: false,
+    },
+    image: {
+      type: String,
+      required: false,
+    },
     description: {
       type: String,
+    },
+    organization: {
+      type: Schema.Types.ObjectId,
+      ref: 'Organization',
       required: true,
     },
 

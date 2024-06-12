@@ -1,5 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsNotEmpty, IsOptional, IsString } from 'class-validator';
+import { IsArray, IsNotEmpty, IsOptional, IsString } from 'class-validator';
 
 export class CreateProjectDto {
   @ApiProperty()
@@ -9,8 +9,23 @@ export class CreateProjectDto {
 
   @ApiProperty()
   @IsString()
+  @IsNotEmpty()
+  organization: string;
+
+  @ApiProperty()
+  @IsString()
   @IsOptional()
   description: string;
+
+  @ApiProperty()
+  @IsString()
+  @IsOptional()
+  type: string;
+
+  @ApiProperty()
+  @IsString()
+  @IsOptional()
+  image: string;
 
   @ApiProperty()
   @IsString()
@@ -23,9 +38,9 @@ export class CreateProjectDto {
   endDate: string;
 
   @ApiProperty()
-  @IsString()
+  @IsArray()
   @IsOptional()
-  boardColumns: string;
+  boardColumns: string[];
 
   @ApiProperty()
   @IsString()

@@ -15,8 +15,8 @@ export class CaslAbilityFactory {
   defineAbility(user: TUser) {
     const builder = new AbilityBuilder<AppAbility>(createMongoAbility);
 
-    if (user?.isAdmin) builder.can(Action.Manage, 'all');
-    else builder.can(Action.Read, 'all');
+    // if (user?.isAdmin) builder.can(Action.Manage, 'all');
+    // else builder.can(Action.Read, 'all');
 
     return builder.build({
       detectSubjectType: (item) =>

@@ -12,7 +12,7 @@ export enum TaskTypes {
   Feature = 'feature',
 }
 
-export const TaskSchema = new Schema<TTask>(
+export const Task = new Schema<TTask>(
   {
     title: {
       type: String,
@@ -21,13 +21,15 @@ export const TaskSchema = new Schema<TTask>(
     },
     description: {
       type: String,
-
+    },
+    project: {
+      type: Schema.Types.ObjectId,
+      ref: 'Project',
       required: true,
     },
 
     type: {
       type: String,
-      enum: [TaskTypes.Bug, TaskTypes.Feature],
     },
 
     labels: {
@@ -63,7 +65,10 @@ export const TaskSchema = new Schema<TTask>(
 
     priority: {
       type: String,
-      enum: [Priority.Low, Priority.Medium, Priority.High],
+    },
+
+    group: {
+      type: String,
     },
   },
   {

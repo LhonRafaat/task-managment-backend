@@ -4,6 +4,7 @@ import * as bcrypt from 'bcrypt';
 import { LoginPayload } from './dto/login.payload';
 import { RegisterPayload } from './dto/register.payload';
 import { JwtService } from '@nestjs/jwt';
+import { AcceptInvitePayload } from './dto/accept-invite.payload';
 
 @Injectable()
 export class AuthService {
@@ -28,5 +29,17 @@ export class AuthService {
 
   async register(payload: RegisterPayload) {
     return await this.usersService.create(payload);
+  }
+
+  async registerWithInvite(payload: AcceptInvitePayload) {
+    return await this.usersService.joinOrganization(payload);
+  }
+
+  async forgotPassword(payload: { email: string }) {
+    return await this.usersService.forgotPassword(payload);
+  }
+
+  async resetPassword(id, token, password) {
+    return await this.usersService.resetPassword(id, token, password);
   }
 }

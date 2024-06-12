@@ -1,6 +1,7 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { TTask } from '../../task/models/task.model';
 import { TUser } from '../../users/user.model';
+import { TOrganization } from '../../organization/models/organization.model';
 
 export class TProject {
   @ApiProperty()
@@ -8,6 +9,15 @@ export class TProject {
 
   @ApiProperty()
   title: string;
+
+  @ApiProperty()
+  type: string;
+
+  @ApiProperty()
+  image: string;
+
+  @ApiProperty()
+  organization: TOrganization;
 
   @ApiProperty()
   description: string;
